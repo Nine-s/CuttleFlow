@@ -1,0 +1,21 @@
+{  
+   "bandwidth":"X",
+   "nodes": [
+
+    {
+       "name": "node01",
+       "RAM": "5G",
+       "cores":"8",
+       "CPU":"1300m"
+       
+    },
+
+    {
+       "name": "node02",
+       "RAM": "5G",
+       "cores":"8",
+       "CPU":"1300m"
+       
+    }
+ ]
+}

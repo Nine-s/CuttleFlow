@@ -1,0 +1,118 @@
+task_id	hash	native_id	process	tag	name	status	exit	module	container	cpus	time	disk	memory	attempt	submit	start	complete	duration	realtime	queue	%cpu	%mem	rss	vmem	peak_rss	peak_vmem	rchar	wchar	syscr	syscw	read_bytes	write_bytes	vol_ctxt	inv_ctxt	env	workdir	script	scratch	error_action
+5	7a/92415a	2806635	CHECK_STRANDNESS	-	CHECK_STRANDNESS (1)	CACHED	0	-	-	1	-	-	-	1	2023-09-25 18:07:04.885	2023-09-25 18:07:04.916	2023-09-25 18:07:05.100	215ms	24ms	-	119.6%	0.0%	0	0	0	0	576.4 KB	1.8 KB	304	25	0	4 KB	0	0	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/7a/92415a154f58193d08f644df8d2073	
+	STRANDNESS="firststrand"
+     	-	-
+3	ab/535085	2807221	GENERATE_DECOY_TRANSCIPTROME	-	GENERATE_DECOY_TRANSCIPTROME	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:09:03.100	2023-09-25 18:09:03.198	2023-09-25 18:09:08.811	5.7s	5.5s	-	7.1%	0.0%	6.2 MB	22 MB	6.2 MB	22 MB	371.5 MB	231.5 MB	2115	307	134 MB	231.3 MB	6106	19	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/ab/5350856704af74141c9cd2e18fc668	
+    grep "^>" <BDGP6.fasta | cut -d " " -f 1 > decoy.txt
+    sed -i -e 's/>//g' decoy.txt
+    cat BDGP6_cdna.fasta BDGP6.fasta > gentrome.fa
+    	-	-
+4	a9/dc6783	2807225	HISAT2_INDEX_REFERENCE	-	HISAT2_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:09:03.130	2023-09-25 18:09:03.204	2023-09-25 18:10:06.752	1m 4s	59.6s	-	278.9%	0.3%	943.5 MB	2 GB	947.5 MB	2 GB	824.3 MB	769.8 MB	71196	120673	2 MB	769.8 MB	23701	2531	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/a9/dc6783171cb752330726cf3c847e83	
+    hisat2-build BDGP6.fasta BDGP6 -p 7 
+    	-	-
+1	12/34d314	2807223	kallisto_index	-	kallisto_index	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:09:03.114	2023-09-25 18:09:03.201	2023-09-25 18:10:19.768	1m 17s	1m 17s	-	89.0%	0.5%	1.8 GB	2.4 GB	2.4 GB	2.4 GB	92.3 MB	675 MB	6189	93405	84 MB	675 MB	15878	5780	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/12/34d314b7b3b54f188a7c437be633eb	
+	kallisto index -i BDGP6_cdna.index BDGP6_cdna.fasta
+		-	-
+6	70/8d1bd6	2808668	SALMON_INDEX_REFERENCE	-	SALMON_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:09:08.864	2023-09-25 18:09:08.912	2023-09-25 18:10:37.511	1m 29s	1m 28s	-	548.5%	0.2%	832.3 MB	2.1 GB	1.1 GB	2.1 GB	3.3 GB	1.3 GB	163870	89151	32 KB	1.3 GB	42117	5327	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/70/8d1bd68f6c3663d13f0a77285b4540	
+    salmon index -t gentrome.fa -d decoy.txt -p 12 -i salmon_index
+    	-	-
+9	33/522230	2816910	SALMON_ALIGN_QUANT	-	SALMON_ALIGN_QUANT (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:10:37.552	2023-09-25 18:10:37.611	2023-09-25 18:12:25.874	1m 48s	1m 44s	-	440.2%	0.6%	1.9 GB	2.7 GB	1.9 GB	2.7 GB	2.1 GB	1.4 MB	195237	377	614.1 MB	1.4 MB	250	313	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/33/5222309cc733f7c84337ac23ee503f	
+    if [[ ($STRANDNESS == "firststrand") ]]; then 
+	salmon quant -i salmon_index -l ISR -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --validateMappings -o transcripts_quant
+    elif [[ ($STRANDNESS == "secondstrand") ]]; then 
+        salmon quant -i salmon_index -l ISF -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --validateMappings -o transcripts_quant
+	elif [[ $STRANDNESS == "unstranded" ]]; then
+		salmon quant -i salmon_index -l IU -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --validateMappings -o transcripts_quant
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+
+   	-	-
+2	6a/a11bb3	2807219	STAR_INDEX_REFERENCE	-	STAR_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:09:03.068	2023-09-25 18:09:03.194	2023-09-25 18:12:32.941	3m 30s	3m 27s	-	173.6%	1.4%	4.8 GB	6.5 GB	4.9 GB	6.5 GB	2.7 GB	5.4 GB	75264	4041	153.1 MB	5.4 GB	158127	10586	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/6a/a11bb31e74a715ddeaf92e66dd3c0a	
+    mkdir star
+    STAR \
+            --runMode genomeGenerate \
+            --genomeDir star/ \
+            --genomeFastaFiles BDGP6.fasta \
+            --sjdbGTFfile BDGP6.gtf \
+            --runThreadN 7 \
+	
+    	-	-
+7	7a/4535e1	2812275	HISAT2_ALIGN	-	HISAT2_ALIGN (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:10:07.714	2023-09-25 18:10:08.047	2023-09-25 18:12:55.289	2m 48s	2m 47s	-	597.0%	0.1%	313.8 MB	814.7 MB	313.8 MB	874.9 MB	7.2 GB	9.2 GB	706251	1204205	0	9.2 GB	202789	9322	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/7a/4535e195f94a095ba34b4b63c2544c	
+    if [[ ($STRANDNESS == "firststrand") ]]; then
+    
+        hisat2 -x BDGP6 -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --new-summary --summary-file SRR14197369_summary.log --thread 7 --dta-cufflinks --rna-strandness FR -S SRR14197369.sam
+
+    elif [[ ($STRANDNESS == "secondstrand") ]]; then
+    
+        hisat2 -x BDGP6 -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --new-summary --summary-file SRR14197369_summary.log --thread 7 --dta-cufflinks --rna-strandness RF -S SRR14197369.sam
+
+    elif [[ $STRANDNESS == "unstranded" ]]; then
+       
+        hisat2 -x BDGP6 -1 SRR14197369_1.fastq.gz -2 SRR14197369_2.fastq.gz --new-summary --summary-file SRR14197369_summary.log --thread 7 --dta-cufflinks -S SRR14197369.sam
+    else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+    	-	-
+8	36/db5dce	2814624	kallisto_map	-	kallisto_map (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:10:19.828	2023-09-25 18:10:19.868	2023-09-25 18:16:41.115	6m 21s	6m 18s	-	316.0%	0.5%	1.8 GB	2.2 GB	1.8 GB	2.2 GB	7.9 GB	3 GB	820394	59689	2.2 GB	3 GB	78678	2426	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/36/db5dceef957343a208c54a246e0b8e	
+ 	if [[ $STRANDNESS == "firststrand" ]]; then
+		kallisto quant -i BDGP6_cdna.index -o ./ --gtf BDGP6.gtf --fr-stranded --genomebam --threads 7 SRR14197369_1.fastq.gz SRR14197369_2.fastq.gz
+   	elif [[ $STRANDNESS == "secondstrand" ]]; then
+		kallisto quant -i BDGP6_cdna.index -o ./ --gtf BDGP6.gtf --rf-stranded --genomebam --threads 7 SRR14197369_1.fastq.gz SRR14197369_2.fastq.gz
+    	elif [[ $STRANDNESS == "unstranded" ]]; then
+		kallisto quant -i BDGP6_cdna.index -o ./ --gtf BDGP6.gtf --genomebam --threads 7 SRR14197369_1.fastq.gz SRR14197369_2.fastq.gz
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+    	fi
+ 		-	-
+10	fe/a6e288	2825805	STAR_ALIGN	-	STAR_ALIGN (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 18:12:34.063	2023-09-25 18:12:36.079	2023-09-25 18:18:40.998	6m 7s	6m 4s	-	567.5%	1.6%	5.6 GB	6.9 GB	5.6 GB	6.9 GB	10.5 GB	7.9 GB	1046359	59166	4 KB	7.9 GB	236479	27063	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_droso_min/fe/a6e288ddd8c80fbb48558ee92c6f9f	
+    if [[ ($STRANDNESS == "firststrand") || ($STRANDNESS == "secondstrand") ]]; then
+		STAR \
+        		--genomeDir . \
+        		--readFilesIn SRR14197369_1.fastq.gz SRR14197369_2.fastq.gz  \
+        		--runThreadN 7 \
+        		--outFileNamePrefix SRR14197369. \
+        		--sjdbGTFfile BDGP6.gtf \
+			--alignSoftClipAtReferenceEnds No \
+			--outFilterIntronMotifs RemoveNoncanonical \
+			--outSAMattrIHstart 0 \
+                        --readFilesCommand zcat
+
+
+
+			
+	elif [[ $STRANDNESS == "unstranded" ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn SRR14197369_1.fastq.gz SRR14197369_2.fastq.gz  \
+			--alignSoftClipAtReferenceEnds No \
+			--outSAMstrandField intronMotif \
+			--outFilterIntronMotifs RemoveNoncanonical \
+        	--runThreadN 7 \
+        	--outFileNamePrefix SRR14197369. \
+        	--sjdbGTFfile BDGP6.gtf \
+			--outSAMattrIHstart 0
+
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+
+   	-	-

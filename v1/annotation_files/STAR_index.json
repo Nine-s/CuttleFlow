@@ -1,0 +1,28 @@
+{
+    "toolname": "STAR_GENOMEGENERATE",
+    "operation": "index",
+    "domain_specific_features": "splice_junctions",
+    "is_splittable": "False",
+    "mendatory_input_list": ["reads", "ref_genome"],
+    "output_list": "star",
+    "module_path": "/path/star",
+    "module_name":"STAR_INDEX",
+
+    "resource_requirements_RAM": [
+        {
+            "organism_name": "drosophila",
+            "reference_size": "0.137G",
+            "RAM": "6G"
+        },
+        {
+            "organism_name": "mouse",
+            "reference_size": "2.6G",
+            "RAM": "40G"
+        },
+        {
+            "organism_name": "human",
+            "reference_size": "3.2G",
+            "RAM": "40G"
+        }
+    ]
+}

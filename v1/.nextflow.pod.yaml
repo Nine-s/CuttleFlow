@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: peaceful-mercator
+  namespace: default
+  labels: {app: nextflow, runName: peaceful-mercator}
+spec:
+  restartPolicy: Never
+  containers:
+  - name: peaceful-mercator
+    image: nextflow/nextflow:23.09.3-edge
+    command: [/bin/bash, -c, source /etc/nextflow/init.sh; nextflow run Nine-s/rnasplice_generated
+        -name peaceful-mercator -resume last -r master]
+    env:
+    - {name: NXF_WORK, value: /workspace/ninon/work}
+    - {name: NXF_ASSETS, value: /workspace/projects}
+    - {name: NXF_EXECUTOR, value: k8s}
+    - {name: NXF_ANSI_LOG, value: 'false'}
+    volumeMounts:
+    - {name: vol-1, mountPath: /workspace}
+    - {name: vol-2, mountPath: /etc/nextflow}
+  serviceAccountName: default
+  securityContext: {runAsUser: 0}
+  volumes:
+  - name: vol-1
+    persistentVolumeClaim: {claimName: nextflow-ninon}
+  - name: vol-2
+    configMap: {name: nf-config-a40fdf25}

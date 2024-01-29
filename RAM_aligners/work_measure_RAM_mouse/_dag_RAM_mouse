@@ -1,0 +1,138 @@
+digraph "_dag_RAM_mouse" {
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p1 [label="CHECK_STRANDNESS"];
+p0 -> p1 [label="read_pairs_ch"];
+
+p1 [label="CHECK_STRANDNESS"];
+p8 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="first"];
+p1 -> p8 [label="STRANDNESS"];
+
+p2 [shape=point,label="",fixedsize=true,width=0.1];
+p3 [label="EXTRACT_EXONS"];
+p2 -> p3 [label="annotation"];
+
+p3 [label="EXTRACT_EXONS"];
+p7 [label="HISAT2_INDEX_REFERENCE"];
+p3 -> p7;
+
+p4 [shape=point,label="",fixedsize=true,width=0.1];
+p5 [label="EXTRACT_SPLICE_SITES"];
+p4 -> p5 [label="annotation"];
+
+p5 [label="EXTRACT_SPLICE_SITES"];
+p7 [label="HISAT2_INDEX_REFERENCE"];
+p5 -> p7;
+
+p6 [shape=point,label="",fixedsize=true,width=0.1];
+p7 [label="HISAT2_INDEX_REFERENCE"];
+p6 -> p7 [label="reference"];
+
+p7 [label="HISAT2_INDEX_REFERENCE"];
+p9 [label="HISAT2_ALIGN"];
+p7 -> p9;
+
+p8 [shape=circle,label="",fixedsize=true,width=0.1,xlabel="first"];
+p9 [label="HISAT2_ALIGN"];
+p8 -> p9;
+
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p9 [label="HISAT2_ALIGN"];
+p0 -> p9 [label="read_pairs_ch"];
+
+p9 [label="HISAT2_ALIGN"];
+p10 [shape=point];
+p9 -> p10;
+
+p11 [shape=point,label="",fixedsize=true,width=0.1];
+p13 [label="STAR_INDEX_REFERENCE"];
+p11 -> p13 [label="reference"];
+
+p12 [shape=point,label="",fixedsize=true,width=0.1];
+p13 [label="STAR_INDEX_REFERENCE"];
+p12 -> p13 [label="annotation"];
+
+p13 [label="STAR_INDEX_REFERENCE"];
+p15 [label="STAR_ALIGN"];
+p13 -> p15;
+
+p1 [label="CHECK_STRANDNESS"];
+p15 [label="STAR_ALIGN"];
+p1 -> p15 [label="STRANDNESS"];
+
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p15 [label="STAR_ALIGN"];
+p0 -> p15 [label="read_pairs_ch"];
+
+p14 [shape=point,label="",fixedsize=true,width=0.1];
+p15 [label="STAR_ALIGN"];
+p14 -> p15 [label="annotation"];
+
+p15 [label="STAR_ALIGN"];
+p16 [shape=point];
+p15 -> p16;
+
+p17 [shape=point,label="",fixedsize=true,width=0.1];
+p19 [label="GENERATE_DECOY_TRANSCIPTROME"];
+p17 -> p19 [label="reference"];
+
+p18 [shape=point,label="",fixedsize=true,width=0.1];
+p19 [label="GENERATE_DECOY_TRANSCIPTROME"];
+p18 -> p19 [label="transcriptome"];
+
+p19 [label="GENERATE_DECOY_TRANSCIPTROME"];
+p20 [label="SALMON_INDEX_REFERENCE"];
+p19 -> p20;
+
+p19 [label="GENERATE_DECOY_TRANSCIPTROME"];
+p20 [label="SALMON_INDEX_REFERENCE"];
+p19 -> p20;
+
+p20 [label="SALMON_INDEX_REFERENCE"];
+p22 [label="SALMON_ALIGN_QUANT"];
+p20 -> p22;
+
+p1 [label="CHECK_STRANDNESS"];
+p22 [label="SALMON_ALIGN_QUANT"];
+p1 -> p22 [label="STRANDNESS"];
+
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p22 [label="SALMON_ALIGN_QUANT"];
+p0 -> p22 [label="read_pairs_ch"];
+
+p21 [shape=point,label="",fixedsize=true,width=0.1];
+p22 [label="SALMON_ALIGN_QUANT"];
+p21 -> p22 [label="annotation"];
+
+p22 [label="SALMON_ALIGN_QUANT"];
+p23 [shape=point];
+p22 -> p23;
+
+p24 [shape=point,label="",fixedsize=true,width=0.1];
+p25 [label="kallisto_index"];
+p24 -> p25 [label="fasta_input"];
+
+p25 [label="kallisto_index"];
+p27 [label="kallisto_map"];
+p25 -> p27;
+
+p1 [label="CHECK_STRANDNESS"];
+p27 [label="kallisto_map"];
+p1 -> p27 [label="STRANDNESS"];
+
+p0 [shape=point,label="",fixedsize=true,width=0.1,xlabel="Channel.fromFilePairs"];
+p27 [label="kallisto_map"];
+p0 -> p27 [label="read_pairs_ch"];
+
+p26 [shape=point,label="",fixedsize=true,width=0.1];
+p27 [label="kallisto_map"];
+p26 -> p27 [label="gtf"];
+
+p27 [label="kallisto_map"];
+p29 [shape=point];
+p27 -> p29;
+
+p27 [label="kallisto_map"];
+p28 [shape=point];
+p27 -> p28;
+
+}

@@ -1,0 +1,13 @@
+infrastructure,dataset_size,HISAT2,STAR,Salmon
+TU-FONDA-cluster,0.35,205.5,346,68.5
+TU-FONDA-cluster,1.3,539.5,2394.5,231
+TU-FONDA-cluster,3.5,1610,2421,617
+TU-FONDA-cluster,4.8,1560,19291,644
+TU-FONDA-cluster,13,7035,15268.5,2386
+TU-FONDA-cluster,48,23050,32300,6668.5
+redwood,0.35,111.5,138,25
+redwood,1.3,307,699,79
+redwood,3.5,177,330,25.35
+redwood,4.8,1009.5,5482.5,242
+redwood,13,671,1812,74
+redwood,48,2219,14180,464

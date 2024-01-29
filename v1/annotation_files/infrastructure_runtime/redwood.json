@@ -1,0 +1,28 @@
+{  
+   "nodes": [
+
+    {
+       "name": "node01",
+       "RAM": "5G",
+       "cores":"8",
+       "CPU":"1300m"
+       
+    }
+ ]
+}
+
+cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
+Bitte melden Sie Fehler an cpufreq@vger.kernel.org.
+analysiere CPU 0:
+  Treiber: acpi-cpufreq
+  Folgende CPUs laufen mit der gleichen Hardware-Taktfrequenz: 0
+  Die Taktfrequenz folgender CPUs werden per Software koordiniert: 0
+  Maximale Dauer eines Taktfrequenzwechsels: 10.0 us.
+  Hardwarebedingte Grenzen der Taktfrequenz: 1.20 GHz - 3.30 GHz
+  mögliche Taktfrequenzen: 3.30 GHz, 3.30 GHz, 3.10 GHz, 3.00 GHz, 2.80 GHz, 2.70 GHz, 2.50 GHz, 2.40 GHz, 2.20 GHz, 2.10 GHz, 1.90 GHz, 1.80 GHz, 1.60 GHz, 1.50 GHz, 1.30 GHz, 1.20 GHz
+  mögliche Regler: userspace, conservative, powersave, ondemand, performance, schedutil
+  momentane Taktik: die Frequenz soll innerhalb 1.20 GHz und 3.30 GHz.
+                    liegen. Der Regler "ondemand" kann frei entscheiden,
+                    welche Taktfrequenz innerhalb dieser Grenze verwendet wird.
+  momentane Taktfrequenz ist 3.30 GHz.
+  Statistik:3.30 GHz:5,29%, 3.30 GHz:0,00%, 3.10 GHz:0,01%, 3.00 GHz:0,01%, 2.80 GHz:0,02%, 2.70 GHz:0,01%, 2.50 GHz:0,02%, 2.40 GHz:0,02%, 2.20 GHz:0,01%, 2.10 GHz:0,03%, 1.90 GHz:0,05%, 1.80 GHz:0,03%, 1.60 GHz:0,03%, 1.50 GHz:0,08%, 1.30 GHz:0,43%, 1.20 GHz:93,96%  (277524)

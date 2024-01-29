@@ -1,0 +1,31 @@
+{
+    "toolname": "Kallisto",
+    "operation":"align",
+    "domain_specific_features": "quasi-mapping",
+    "is_splittable": "False",
+    "mendatory_input_list": ["reads", "ref_transcriptome", "ref_annotation"],
+    "optional_inputs_list": ["bam"],
+    "output_list": ["quant_table"],
+    "module_path": "/path/kallisto",
+    "module_name":"KALLISTO_ALIGN",
+
+    "resource_requirements_RAM": [
+        {
+            "organism_name": "drosophila",
+            "reference_size": "0.137G",
+            "RAM": "2.5G"
+        },
+        {
+            "organism_name": "mouse",
+            "reference_size": "2.6G",
+            "RAM": "5G"
+        },
+        {
+            "organism_name": "human",
+            "reference_size": "3.2G",
+            "RAM": "5G"
+        }
+    ]
+}
+
+

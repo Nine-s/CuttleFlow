@@ -1,0 +1,18 @@
+{
+    "rules": [
+      
+      {
+        "conditions": [["task_exists", "align", "True"], ["task_toolname", "align", "STAR"], ["infra_requirements_num", "RAM", "40", "GB"], ["input_requirements_size", "ref_genome", "2", "GB"]],
+        "operation": "replace_tool",
+        "conditions_2": [["infra_requirements_num", "RAM", "20", "GB"], ["input_requirements_size", "ref_genome", "1", "GB"]],
+        "condition_2_true": "HISAT2",
+        "condition_2_false": "Salmon",
+        "parameters": "",
+      },
+       {
+        "conditions": [["task_exists", "align", "True"], ["task_toolname", "align", "STAR"], ["infra_requirements_num", "RAM", "40", "GB"], ["input_requirements_size", "ref_genome", "2", "GB"]],
+        "operations": "scatter_gather"
+       }
+ 
+    ]
+ }

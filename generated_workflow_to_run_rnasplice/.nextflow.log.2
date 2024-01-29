@@ -1,0 +1,23 @@
+Jan-13 00:10:44.957 [main] DEBUG nextflow.cli.Launcher - $> nextflow kuberun Nine-s/rnasplice_generated_modified -r master -c nextflow.config
+Jan-13 00:10:45.176 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/ninon/.nextflow/plugins; core-plugins: nf-amazon@2.1.4,nf-azure@1.3.2,nf-cloudcache@0.3.0,nf-codecommit@0.1.5,nf-console@1.0.6,nf-ga4gh@1.1.0,nf-google@1.8.3,nf-tower@1.6.3,nf-wave@0.14.0
+Jan-13 00:10:45.187 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jan-13 00:10:45.188 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jan-13 00:10:45.192 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jan-13 00:10:45.203 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jan-13 00:10:45.217 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/ninon/.nextflow/scm
+Jan-13 00:10:45.244 [main] DEBUG nextflow.scm.RepositoryFactory - Found Git repository result: [RepositoryFactory]
+Jan-13 00:10:45.253 [main] DEBUG nextflow.scm.RepositoryProvider - Request [credentials -:-] -> https://api.github.com/repos/Nine-s/rnasplice_generated_modified/contents/nextflow.config
+Jan-13 00:10:45.795 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /home/ninon/description_prototype/generated_workflow_to_run_rnasplice/nextflow.config
+Jan-13 00:10:45.800 [main] DEBUG nextflow.config.ConfigBuilder - User config file: https://github.com/Nine-s/rnasplice_generated_modified/nextflow.config
+Jan-13 00:10:45.800 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /home/ninon/description_prototype/generated_workflow_to_run_rnasplice/nextflow.config
+Jan-13 00:10:45.801 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ninon/description_prototype/generated_workflow_to_run_rnasplice/nextflow.config
+Jan-13 00:10:45.801 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: https://github.com/Nine-s/rnasplice_generated_modified/nextflow.config
+Jan-13 00:10:45.801 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /home/ninon/description_prototype/generated_workflow_to_run_rnasplice/nextflow.config
+Jan-13 00:10:45.823 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jan-13 00:10:46.695 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jan-13 00:10:46.788 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jan-13 00:10:46.886 [main] DEBUG nextflow.k8s.K8sConfig - Kubernetes workDir=/workspace/ninon/work; projectDir=/workspace/projects; volumeClaims=[nextflow-ninon]
+Jan-13 00:10:47.004 [main] DEBUG nextflow.scm.ProviderConfig - Using SCM config path: /home/ninon/.nextflow/scm
+Jan-13 00:10:47.156 [main] DEBUG nextflow.k8s.K8sDriverLauncher - Created K8s configMap with name: nf-config-9fca1177
+Jan-13 00:10:47.247 [main] INFO  nextflow.k8s.K8sDriverLauncher - Launcher pod spec file: .nextflow.pod.yaml
+Jan-13 00:11:24.886 [main] DEBUG nextflow.k8s.K8sDriverLauncher - Wait for pod termination name=desperate-borg

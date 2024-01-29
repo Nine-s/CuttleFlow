@@ -1,0 +1,1 @@
+2023-12-07 15:24:04	-	scruffy_bernard	-	585cd0524e6ac7d368838a039ca5af2e	45a4cb08-5340-4306-8fc6-0b42d2713176	nextflow run main.nf -c nextflow.config -resume

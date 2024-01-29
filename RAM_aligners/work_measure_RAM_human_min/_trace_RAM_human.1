@@ -1,0 +1,30 @@
+task_id	hash	native_id	process	tag	name	status	exit	module	container	cpus	time	disk	memory	attempt	submit	start	complete	duration	realtime	queue	%cpu	%mem	rss	vmem	peak_rss	peak_vmem	rchar	wchar	syscr	syscw	read_bytes	write_bytes	vol_ctxt	inv_ctxt	env	workdir	script	scratch	error_action
+5	34/ec38ad	2636584	CHECK_STRANDNESS	-	CHECK_STRANDNESS (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-25 10:18:47.011	2023-09-25 10:18:47.091	2023-09-25 10:18:47.273	262ms	28ms	-	82.1%	0.0%	0	0	0	0	576.3 KB	1.8 KB	304	25	0	4 KB	0	0	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human_min/34/ec38ad55d7081f659f7bf4bc00c3a7	
+	STRANDNESS="firststrand"
+     	-	-
+1	2a/dbcf12	2636511	GENERATE_DECOY_TRANSCIPTROME	-	GENERATE_DECOY_TRANSCIPTROME	ABORTED	-	-	-	1	-	-	-	1	2023-09-25 10:18:46.897	2023-09-25 10:18:46.988	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human_min/2a/dbcf12b2f0076c1d24eb00ed04ba3e	
+    grep "^>" <Homo_sapiens.GRCh38.dna_sm.toplevel.fa | cut -d " " -f 1 > decoy.txt
+    sed -i -e 's/>//g' decoy.txt
+    cat Homo_sapiens.GRCh38.cdna.all.fa Homo_sapiens.GRCh38.dna_sm.toplevel.fa > gentrome.fa
+    	-	-
+4	21/292780	2636513	kallisto_index	-	kallisto_index	ABORTED	-	-	-	1	-	-	-	1	2023-09-25 10:18:46.929	2023-09-25 10:18:46.999	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human_min/21/29278041637620549c901a6982b320	
+	kallisto index -i Homo_sapiens.GRCh38.cdna.all.index Homo_sapiens.GRCh38.cdna.all.fa
+		-	-
+3	a1/c1cf7b	2636518	STAR_INDEX_REFERENCE	-	STAR_INDEX_REFERENCE	ABORTED	-	-	-	1	-	-	-	1	2023-09-25 10:18:46.957	2023-09-25 10:18:47.002	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human_min/a1/c1cf7bc1b7754507f99eada45a3c04	
+    mkdir star
+    STAR \
+            --runMode genomeGenerate \
+            --genomeDir star/ \
+            --genomeFastaFiles Homo_sapiens.GRCh38.dna_sm.toplevel.fa \
+            --sjdbGTFfile Homo_sapiens.GRCh38.110.gtf \
+            --runThreadN 7 \
+	
+    	-	-
+2	20/323111	2636545	HISAT2_INDEX_REFERENCE	-	HISAT2_INDEX_REFERENCE	ABORTED	-	-	-	1	-	-	-	1	2023-09-25 10:18:46.993	2023-09-25 10:18:47.086	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	-	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners_hisat_minimal/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human_min/20/323111ab3884669a24899e3216fca1	
+    hisat2-build Homo_sapiens.GRCh38.dna_sm.toplevel.fa Homo_sapiens.GRCh38.dna_sm.toplevel -p 7 
+    	-	-

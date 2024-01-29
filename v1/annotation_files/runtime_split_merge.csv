@@ -1,0 +1,7 @@
+infrastructure,dataset_size,RAM,CPUMHz,ref_genome_size,duration
+TU-FONDA-cluster,3.5,15,2945.643,0.137,558.0
+TU-FONDA-cluster,13.0,15,2945.643,0.137,1601.2
+TU-FONDA-cluster,48.0,15,2945.643,0.137,6713.0
+redwood,3.5,346,3301.000,0.137,105.9
+redwood,13.0,346,3301.000,0.137,610.8
+redwood,48.0,346,3301.000,0.137,1833.5

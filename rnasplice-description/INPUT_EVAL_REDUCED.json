@@ -1,0 +1,113 @@
+{
+   "samples": [
+
+     {
+        "name": "DGRP_Line_370_Male_Isolated_Rep2",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/sra/ERR12030556_1.fastq.gz",
+        "path_r2": "/workspace/ninon/sra/ERR12030556_2.fastq.gz",
+        "strand": "forward",
+        "uncompressed_size": "16",
+        "condition": "isolated"
+     },
+     {
+        "name": "DGRP_Line_370_Male_Isolated_Rep1",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/sra/ERR12030555_1.fastq.gz",
+        "path_r2": "/workspace/ninon/sra/ERR12030555_2.fastq.gz",
+        "strand": "forward",
+        "uncompressed_size": "21",
+        "condition": "isolated"
+     },
+     {
+        "name": "DGRP_Line_370_Male_Group_Rep2",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/sra/ERR12030554_1.fastq.gz",
+        "path_r2": "/workspace/ninon/sra/ERR12030554_2.fastq.gz",
+        "strand": "forward",
+        "uncompressed_size": "13",
+        "condition": "group"
+     },
+     {
+        "name": "DGRP_Line_370_Male_Group_Rep1",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/sra/ERR12030553_1.fastq.gz",
+        "path_r2": "/workspace/ninon/sra/ERR12030553_2.fastq.gz",
+        "strand": "forward",
+        "uncompressed_size": "21",
+        "condition": "group"
+     }
+   ],
+
+   "references": [
+    {
+       "name": "annotation_gtf",
+       "path": "/workspace/ninon/data/Drosophila_melanogaster.BDGP6.32.106.gtf",
+       "reference_type": "annotation",
+       "uncompressed_size": "0.149"
+    },
+
+    {
+       "name": "genome",
+       "path": "/workspace/ninon/data/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa",
+       "reference_type": "genome",
+       "uncompressed_size": "0.136"
+    },
+
+    {
+       "name": "transcripts_fasta",
+       "path": "/workspace/ninon/data/Drosophila_melanogaster.BDGP6.32.cdna.all.fa",
+       "reference_type": "transcriptome",
+       "uncompressed_size": "0.089"
+    }
+ ],
+ 
+ "parameters": [
+   {
+     "name": "csv_contrastsheet",
+     "value": "/workspace/projects/Nine-s/rnasplice_test/contrastsheet.csv" 
+   },
+   {
+    "name": "basedir",
+    "value": "/workspace/projects/Nine-s/rnasplice_test" 
+   },
+   {
+    "name": "outdir",
+    "value": "/workspace/ninon/data/results/"
+    },
+   {
+     "name": "alignment_quality",
+     "value": 10
+   },
+   {
+     "name": "n_dexseq_plot",
+     "value": 10
+   },     
+   {
+     "name": "min_samps_gene_expr",
+     "value": 2
+   },
+   {
+     "name": "min_samps_feature_expr",
+     "value": 2
+   },
+   {
+     "name": "min_samps_feature_prop",
+     "value": 2
+   },
+   {
+     "name": "min_feature_expr",
+     "value": 10
+   },
+   {
+     "name": "min_feature_prop",
+     "value": 0.1
+   },
+   {
+     "name": "min_gene_expr",
+     "value": 10
+   }
+    
+ ]
+ 
+}

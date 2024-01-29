@@ -1,0 +1,27 @@
+{
+    "tasks": [
+      
+      {
+         "name": "align",
+         "toolname": "STAR",
+         "operation": "align",
+         "inputs": ["sample01", "ref_gtf", "ref_genome"],
+         "outputs": ["sam"],
+         "parameters": ["--threads 2"],
+         "module_name": "STAR_ALIGN",
+         "module_path": "/home/simon/GitHub/description_prototype/modules_nextflow/STAR_ALIGN.nf"
+      },
+       {
+          "name": "sort_convert",
+          "toolname": "SAMTOOLS",
+          "operation": "postprocess",
+          "inputs": ["STAR_ALIGN.out_channel.sam"],
+          "outputs": ["bam"],
+          "parameters": ["--threads 2"],
+          "module_name": "SAMTOOLS_SORT_CONVERT",
+          "module_path": "/home/simon/GitHub/description_prototype/modules_nextflow/SAMTOOLS.nf",
+          "include_from": "SAMTOOLS_SORT_CONVERT"
+      }
+ 
+   ]
+}

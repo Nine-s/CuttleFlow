@@ -1,0 +1,126 @@
+task_id	hash	native_id	process	tag	name	status	exit	module	container	cpus	time	disk	memory	attempt	submit	start	complete	duration	realtime	queue	%cpu	%mem	rss	vmem	peak_rss	peak_vmem	rchar	wchar	syscr	syscw	read_bytes	write_bytes	vol_ctxt	inv_ctxt	env	workdir	script	scratch	error_action
+6	34/ec38ad	2238277	CHECK_STRANDNESS	-	CHECK_STRANDNESS (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.809	2023-09-21 10:20:37.874	2023-09-21 10:20:38.022	213ms	26ms	-	88.9%	0.0%	0	0	0	0	576.3 KB	1.8 KB	304	25	0	4 KB	0	0	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/34/ec38ad55d7081f659f7bf4bc00c3a7	
+	STRANDNESS="firststrand"
+     	-	-
+4	5b/e3caf0	2238226	EXTRACT_SPLICE_SITES	-	EXTRACT_SPLICE_SITES	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.785	2023-09-21 10:20:37.867	2023-09-21 10:21:20.138	42.4s	42.2s	-	65.0%	0.1%	406 MB	420.3 MB	407.1 MB	421.6 MB	1.4 GB	8.8 MB	179130	36	471.4 MB	8.8 MB	10104	1393	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/5b/e3caf055bd90e4cd0266a1949a54d4	 
+    python /buffer/ag_abi/ninon/measure_RAM_aligners/bin/hisat2_extract_splice_sites.py Homo_sapiens.GRCh38.110.gtf > out_splice_sites.txt
+    	-	-
+3	90/ab2e46	2238211	EXTRACT_EXONS	-	EXTRACT_EXONS	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.774	2023-09-21 10:20:37.864	2023-09-21 10:21:21.863	44.1s	43.9s	-	65.8%	0.1%	407.1 MB	421.8 MB	407.1 MB	421.8 MB	1.4 GB	7.2 MB	179130	35	925.1 MB	7.2 MB	10145	1460	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/90/ab2e46739ed01fb5124e4f4d5fef2c	 
+    python /buffer/ag_abi/ninon/measure_RAM_aligners/bin/hisat2_extract_exons.py Homo_sapiens.GRCh38.110.gtf  > out_exons.txt
+    	-	-
+1	2a/dbcf12	2238199	GENERATE_DECOY_TRANSCIPTROME	-	GENERATE_DECOY_TRANSCIPTROME	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.761	2023-09-21 10:20:37.861	2023-09-21 10:22:06.690	1m 29s	1m 29s	-	6.6%	0.0%	6.5 MB	22 MB	6.5 MB	22 MB	6.7 GB	3.5 GB	38026	3662	3.1 GB	3.5 GB	92522	242	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/2a/dbcf12b2f0076c1d24eb00ed04ba3e	
+    grep "^>" <Homo_sapiens.GRCh38.dna_sm.toplevel.fa | cut -d " " -f 1 > decoy.txt
+    sed -i -e 's/>//g' decoy.txt
+    cat Homo_sapiens.GRCh38.cdna.all.fa Homo_sapiens.GRCh38.dna_sm.toplevel.fa > gentrome.fa
+    	-	-
+5	21/292780	2238194	kallisto_index	-	kallisto_index	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.738	2023-09-21 10:20:37.761	2023-09-21 10:26:28.111	5m 50s	5m 50s	-	84.4%	1.4%	5 GB	5 GB	5 GB	5 GB	429.2 MB	2.5 GB	27754	332647	430.1 MB	2.5 GB	86272	25351	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/21/29278041637620549c901a6982b320	
+	kallisto index -i Homo_sapiens.GRCh38.cdna.all.index Homo_sapiens.GRCh38.cdna.all.fa
+		-	-
+8	d4/616dae	2245909	SALMON_INDEX_REFERENCE	-	SALMON_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:22:06.749	2023-09-21 10:22:06.790	2023-09-21 10:59:57.746	37m 51s	37m 51s	-	485.6%	5.6%	19.3 GB	35.2 GB	19.3 GB	35.2 GB	62 GB	34.9 GB	3613014	1857434	5 GB	34.9 GB	895406	118682	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/d4/616dae99f8b2867fd0957fceb5a823	
+    salmon index -t gentrome.fa -d decoy.txt -p 12 -i salmon_index
+    	-	-
+9	9c/41b0da	2257606	kallisto_map	-	kallisto_map (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:26:28.222	2023-09-21 10:26:28.312	2023-09-21 11:03:12.742	36m 45s	36m 44s	-	364.0%	1.2%	4 GB	4.4 GB	4 GB	4.4 GB	36.3 GB	12.1 GB	3134153	350053	9.1 GB	12.1 GB	430469	63321	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_human/9c/41b0daf08bd20076c64e60eb5a75bd	
+ 	if [[ $STRANDNESS == "firststrand" ]]; then
+		kallisto quant -i Homo_sapiens.GRCh38.cdna.all.index -o ./ --gtf Homo_sapiens.GRCh38.110.gtf --fr-stranded --genomebam --threads 7 SRR26073790_1.fastq.gz SRR26073790_2.fastq.gz
+   	elif [[ $STRANDNESS == "secondstrand" ]]; then
+		kallisto quant -i Homo_sapiens.GRCh38.cdna.all.index -o ./ --gtf Homo_sapiens.GRCh38.110.gtf --rf-stranded --genomebam --threads 7 SRR26073790_1.fastq.gz SRR26073790_2.fastq.gz
+    	elif [[ $STRANDNESS == "unstranded" ]]; then
+		kallisto quant -i Homo_sapiens.GRCh38.cdna.all.index -o ./ --gtf Homo_sapiens.GRCh38.110.gtf --genomebam --threads 7 SRR26073790_1.fastq.gz SRR26073790_2.fastq.gz
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+    	fi
+ 		-	-
+10	48/731717	2285199	SALMON_ALIGN_QUANT	-	SALMON_ALIGN_QUANT (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:59:58.084	2023-09-21 10:59:58.146	2023-09-21 11:06:42.773	6m 45s	6m 45s	-	1734.3%	5.5%	19.2 GB	23.1 GB	19.2 GB	23.1 GB	22.9 GB	9.6 MB	1183167	1649	2.7 GB	9.6 MB	21405	6333	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_human/48/731717d9032e59e4306e51a96cd9de	
+    if [[ ($STRANDNESS == "firststrand") ]]; then 
+	salmon quant -i salmon_index -l ISR -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --validateMappings -o transcripts_quant
+    elif [[ ($STRANDNESS == "secondstrand") ]]; then 
+        salmon quant -i salmon_index -l ISF -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --validateMappings -o transcripts_quant
+	elif [[ $STRANDNESS == "unstranded" ]]; then
+		salmon quant -i salmon_index -l IU -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --validateMappings -o transcripts_quant
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+
+   	-	-
+2	a1/c1cf7b	2238250	STAR_INDEX_REFERENCE	-	STAR_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:20:37.797	2023-09-21 10:20:37.871	2023-09-21 11:37:34.127	1h 16m 56s	1h 16m 56s	-	486.8%	10.4%	36.1 GB	39.8 GB	37.3 GB	39.8 GB	55.6 GB	76.1 GB	1175561	17342	13.4 GB	76.1 GB	1080655	355081	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/a1/c1cf7bc1b7754507f99eada45a3c04	
+    mkdir star
+    STAR \
+            --runMode genomeGenerate \
+            --genomeDir star/ \
+            --genomeFastaFiles Homo_sapiens.GRCh38.dna_sm.toplevel.fa \
+            --sjdbGTFfile Homo_sapiens.GRCh38.110.gtf \
+            --runThreadN 7 \
+	
+    	-	-
+7	c7/4d861a	2243480	HISAT2_INDEX_REFERENCE	-	HISAT2_INDEX_REFERENCE	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 10:21:21.924	2023-09-21 10:21:21.963	2023-09-21 12:13:54.771	1h 52m 33s	1h 52m 33s	-	267.7%	46.6%	161.5 GB	168.4 GB	161.5 GB	168.4 GB	87.9 GB	87.4 GB	10729287	12355979	42.8 GB	87.4 GB	736794	209481	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+	/buffer/ag_abi/ninon/work_measure_RAM_human/c7/4d861aa26f16f7cb1d167697e02389	
+    hisat2-build Homo_sapiens.GRCh38.dna_sm.toplevel.fa Homo_sapiens.GRCh38.dna_sm.toplevel -p 7 --exon out_exons.txt --ss out_splice_sites.txt
+    	-	-
+11	c8/0635dd	2299275	STAR_ALIGN	-	STAR_ALIGN (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 11:37:34.254	2023-09-21 11:37:34.331	2023-09-21 12:38:16.593	1h 42s	1h 39s	-	277.2%	9.8%	34 GB	34.8 GB	34 GB	35.2 GB	75.5 GB	156.6 GB	6659511	227661	24.7 GB	156.6 GB	798150	144194	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_human/c8/0635dddbd1b7f9c74e0c66243b0a8a	
+    if [[ ($STRANDNESS == "firststrand") || ($STRANDNESS == "secondstrand") ]]; then
+		STAR \
+        		--genomeDir . \
+        		--readFilesIn SRR26073790_1.fastq.gz SRR26073790_2.fastq.gz  \
+        		--runThreadN 7 \
+        		--outFileNamePrefix SRR26073790. \
+        		--sjdbGTFfile Homo_sapiens.GRCh38.110.gtf \
+			--alignSoftClipAtReferenceEnds No \
+			--outFilterIntronMotifs RemoveNoncanonical \
+			--outSAMattrIHstart 0 \
+                        --readFilesCommand zcat
+
+
+
+			
+	elif [[ $STRANDNESS == "unstranded" ]]; then
+		STAR \
+            --genomeDir . \
+            --readFilesIn SRR26073790_1.fastq.gz SRR26073790_2.fastq.gz  \
+			--alignSoftClipAtReferenceEnds No \
+			--outSAMstrandField intronMotif \
+			--outFilterIntronMotifs RemoveNoncanonical \
+        	--runThreadN 7 \
+        	--outFileNamePrefix SRR26073790. \
+        	--sjdbGTFfile Homo_sapiens.GRCh38.110.gtf \
+			--outSAMattrIHstart 0
+
+	else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+
+   	-	-
+12	c8/be2331	2330909	HISAT2_ALIGN	-	HISAT2_ALIGN (1)	COMPLETED	0	-	-	1	-	-	-	1	2023-09-21 12:13:54.832	2023-09-21 12:13:54.871	2023-09-21 12:47:39.777	33m 45s	33m 45s	-	688.1%	1.8%	6.2 GB	6.6 GB	6.2 GB	6.6 GB	49.2 GB	152.1 GB	4704283	19933178	763.3 MB	152.1 GB	1314217	61942	PATH=/buffer/ag_abi/ninon/measure_RAM_aligners/bin:$PATH
+STRANDNESS=firststrand
+	/buffer/ag_abi/ninon/work_measure_RAM_human/c8/be2331068926133817ee17dbd0d3a7	
+    if [[ ($STRANDNESS == "firststrand") ]]; then
+    
+        hisat2 -x Homo_sapiens.GRCh38.dna_sm.toplevel -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --new-summary --summary-file SRR26073790_summary.log --thread 7 --dta-cufflinks --rna-strandness FR -S SRR26073790.sam
+
+    elif [[ ($STRANDNESS == "secondstrand") ]]; then
+    
+        hisat2 -x Homo_sapiens.GRCh38.dna_sm.toplevel -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --new-summary --summary-file SRR26073790_summary.log --thread 7 --dta-cufflinks --rna-strandness RF -S SRR26073790.sam
+
+    elif [[ $STRANDNESS == "unstranded" ]]; then
+       
+        hisat2 -x Homo_sapiens.GRCh38.dna_sm.toplevel -1 SRR26073790_1.fastq.gz -2 SRR26073790_2.fastq.gz --new-summary --summary-file SRR26073790_summary.log --thread 7 --dta-cufflinks -S SRR26073790.sam
+    else  
+		echo $STRANDNESS > error_strandness.txt
+		echo "strandness cannot be determined" >> error_strandness.txt
+	fi
+    	-	-

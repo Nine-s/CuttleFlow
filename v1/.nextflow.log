@@ -1,0 +1,1 @@
+Jan-14 14:46:39.937 [main] DEBUG nextflow.cli.Launcher - $> nextflow kuberun Nine-s/rnasplice_generated_modified -r master -c nextflow.config

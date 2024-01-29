@@ -1,0 +1,28 @@
+{
+    "toolname": "Hisat2",
+    "operation": "index",
+    "domain_specific_features": "splice_junctions",
+    "is_splittable": "False",
+    "mendatory_input_list": ["reads", "ref_genome"],
+    "output_list": "ht2",
+    "module_path": "../../../ninon/description_prototype/annotated_nextflow_modules/Hisat2_genome_generate.nf",
+    "module_name":"HISAT2_INDEX",
+
+    "resource_requirements_RAM": [
+        {
+            "organism_name": "drosophila",
+            "reference_size": "0.137G",
+            "RAM": "1G"
+        },
+        {
+            "organism_name": "mouse",
+            "reference_size": "2.6G",
+            "RAM": "20G"
+        },
+        {
+            "organism_name": "human",
+            "reference_size": "3.2G",
+            "RAM": "20G"
+        }
+    ]
+}

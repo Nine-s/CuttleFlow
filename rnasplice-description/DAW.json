@@ -1,0 +1,246 @@
+{
+    "tasks": [
+      
+      {
+         "name": "quality_control",
+         "toolname": "FASTQC",
+         "operation": "quality_control",
+         "inputs": ["samples"],
+         "outputs": ["zip"],
+         "parameters": [""],
+         "module_name": "FASTQC",
+         "module_path": "../../../ninon/description_prototype/rnasplice_modules/fastqc.nf"
+      },
+       {
+          "name": "trimgalore",
+          "toolname": "TRIMGALORE",
+          "operation": "preprocess",
+          "inputs": ["samples"],
+          "outputs": ["preprocessed_reads", "log"],
+          "parameters": [""],
+          "module_name": "TRIMGALORE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/trimgalore.nf"
+      },
+       {
+          "name": "salmon_genomegenerate",
+          "toolname": "SALMON",
+          "operation": "index",
+          "inputs": ["genome", "transcripts_fasta"],
+          "outputs": ["index"],
+          "parameters": [""],
+          "module_name": "SALMON_GENOMEGENERATE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/salmon_genome_generate.nf"
+      },
+       {
+          "name": "salmon_quantification",
+          "toolname": "SALMON",
+          "operation": "pseudoalign",
+          "inputs": ["TRIMGALORE.out_channel.preprocessed_reads", "SALMON_GENOMEGENERATE.out_channel.index"],
+          "outputs": ["transcripts", "json_info"],
+          "parameters": [""],
+          "module_name": "SALMON_QUANT",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/salmon.nf"
+      },
+       {
+          "name": "star_genomegenerate",
+          "toolname": "STAR",
+          "operation": "index",
+          "inputs": ["genome", "annotation_gtf"],
+          "outputs": ["index"],
+          "parameters": [""],
+          "module_name": "STAR_GENOMEGENERATE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/star_genome_generate.nf"
+      },
+       {
+          "name": "star_alignment",
+          "toolname": "STAR",
+          "operation": "align",
+          "inputs": ["TRIMGALORE.out_channel.preprocessed_reads", "STAR_GENOMEGENERATE.out_channel.index", "annotation_gtf"],
+	  "outputs": ["sam", "log_final"],          
+	  "parameters": [""],
+          "module_name": "STAR_ALIGN",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/star_align.nf"
+      },     
+       {
+          "name": "samtools",
+          "toolname": "SAMTOOLS",
+          "operation": "sort_convert",
+          "inputs": ["STAR_ALIGN.out_channel.sam"],
+	  "outputs": ["bam"],          
+	  "parameters": [""],
+          "module_name": "SAMTOOLS",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/samtools.nf"
+      },       
+       {
+          "name": "custom_getchromsizes",
+          "toolname": "CUSTOM_GETCHROMSIZES",
+          "operation": "get_chromsizes",
+          "inputs": ["genome"],
+	  "outputs": ["sizes", "fai", "gzi"],          
+	  "parameters": [""],
+          "module_name": "CUSTOM_GETCHROMSIZES",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/getchromsizes.nf"
+      },      
+       {
+          "name": "bedtools_genomecov",
+          "toolname": "BEDTOOLS",
+          "operation": "genomecov",
+          "inputs": ["SAMTOOLS.out_channel.bam"],
+	  "outputs": ["bedgraph_forward", "bedgraph_reverse"],          
+	  "parameters": [""],
+          "module_name": "BEDTOOLS_GENOMECOV",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/bedtoolsgenomecov.nf"
+      },      
+       {
+          "name": "bedclip_forward",
+          "toolname": "BEDCLIP",
+          "operation": "bedclip",
+          "inputs": ["BEDTOOLS_GENOMECOV.out_channel.bedgraph_forward", "CUSTOM_GETCHROMSIZES.out_channel.sizes"],
+	  "outputs": ["bedgraph"],          
+	  "parameters": [""],
+          "module_name": "BEDCLIP_FORWARD",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/bedclip.nf",
+          "include_from": "BEDCLIP"
+      },      
+       {
+          "name": "bedgraph_to_bigwig_forward",
+          "toolname": "BEDGRAPHTOBIGWIG",
+          "operation": "bedgraphtobigwig",
+          "inputs": ["BEDCLIP_FORWARD.out_channel.bedgraph", "CUSTOM_GETCHROMSIZES.out_channel.sizes"],
+	  "outputs": ["bigwig"],          
+	  "parameters": [""],
+          "module_name": "BEDGRAPH_TO_BIGWIG_FORWARD",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/bedgraphtobigwig.nf", 
+          "include_from": "BEDGRAPHTOBIGWIG"
+      },     
+       {
+          "name": "bedclip_reverse",
+          "toolname": "BEDCLIP",
+          "operation": "bedclip",
+          "inputs": ["BEDTOOLS_GENOMECOV.out_channel.bedgraph_reverse", "CUSTOM_GETCHROMSIZES.out_channel.sizes"],
+	  "outputs": ["bedgraph"],          
+	  "parameters": [""],
+          "module_name": "BEDCLIP_REVERSE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/bedclip.nf",
+          "include_from": "BEDCLIP"
+      },       
+       {
+          "name": "bedgraph_to_bigwig_reverse",
+          "toolname": "BEDGRAPHTOBIGWIG",
+          "operation": "bedgraphtobigwig",
+          "inputs": ["BEDCLIP_REVERSE.out_channel.bedgraph", "CUSTOM_GETCHROMSIZES.out_channel.sizes"],
+	  "outputs": ["bigwig"],          
+	  "parameters": [""],
+          "module_name": "BEDGRAPH_TO_BIGWIG_REVERSE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/bedgraphtobigwig.nf",
+          "include_from": "BEDGRAPHTOBIGWIG"
+      },   
+       {
+          "name": "dexseq_annotation",
+          "toolname": "DEXSEQ",
+          "operation": "dexseq_annotate",
+          "inputs": ["annotation_gtf"],
+	  "outputs": ["gff"],          
+	  "parameters": [""],
+          "module_name": "DEXSEQ_ANNOTATION",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/dexseq_annotation.nf"
+      },         
+       {
+          "name": "dexseq_count",
+          "toolname": "DEXSEQ",
+          "operation": "dexseq_count",
+          "inputs": ["SAMTOOLS.out_channel.bam", "DEXSEQ_ANNOTATION.out_channel.gff", "alignment_quality"],
+	  "outputs": ["dexseq_clean_txt"],          
+	  "parameters": [""],
+          "module_name": "DEXSEQ_COUNT",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/dexseq_count.nf"
+      },   
+       {
+          "name": "merge_results_dexseq",
+          "toolname": "BASH",
+          "operation": "merge_results_dexseq",
+          "inputs": ["DEXSEQ_COUNT.out_channel.dexseq_clean_txt"],
+          "channel_operators": [".collect()"],
+	  "outputs": ["clean_counts"],          
+	  "parameters": [""],
+          "module_name": "MERGE_RESULTS_DEXSEQ",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/merge_results_dexseq.nf"
+      },      
+       {
+          "name": "dexseq_exon",
+          "toolname": "DEXSEQ",
+          "operation": "dexseq_exon",
+          "inputs": ["MERGE_RESULTS_DEXSEQ.out_channel.clean_counts", "DEXSEQ_ANNOTATION.out_channel.gff", "csv_input", "csv_contrastsheet", "n_dexseq_plot"],
+	  "outputs": ["dexseq_exon_dataset_rds", "dexseq_exon_results_rds", "dexseq_gene_results_rds", "dexseq_exon_results_csv", "dexseq_gene_results_csv", "dexseq_plot_results_pdf"],          
+	  "parameters": [""],
+          "module_name": "DEXSEQ_EXON",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/dexseq_exon.nf"
+      },
+        
+       {
+          "name": "gffread_tx2gene",
+          "toolname": "GFFREAD",
+          "operation": "tx2gene",
+          "inputs": ["annotation_gtf"],
+	  "outputs": ["tx2gene"],
+	  "parameters": [""],
+          "module_name": "GFFREAD_TX2GENE",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/gffread_tx2gene.nf"
+      },        
+       {
+          "name": "merge_results_salmon",
+          "toolname": "BASH",
+          "operation": "merge",
+          "inputs": ["SALMON_QUANT.out_channel.transcripts"],
+          "channel_operators": [".collect()"],
+	  "outputs": ["gathered_bam"],          
+	  "parameters": [""],
+          "module_name": "MERGE_RESULTS_SALMON",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/merge_results.nf"
+      },
+
+       {
+          "name": "tximport",
+          "toolname": "TXIMPORT",
+          "operation": "pseudoalign",
+          "inputs": ["MERGE_RESULTS_SALMON.out_channel.gathered_bam","GFFREAD_TX2GENE.out_channel.tx2gene"],
+	  "outputs": ["txi", "txi_s", "txi_ls", "txi_dtu", "gi", "gi_s", "gi_ls", "tpm_gene", "counts_gene", "tpm_gene_scaled", "counts_gene_scaled", "tpm_gene_length_scaled", "counts_gene_length_scaled", "tpm_transcript", "counts_transcript", "tpm_transcript_scaled", "counts_transcript_scaled", "tpm_transcript_length_scaled", "counts_transcript_length_scaled", "tpm_transcript_dtu_scaled", "counts_transcript_dtu_scaled", "tximport_tx2gene", "suppa_tpm"],          
+	  "parameters": [""],
+          "module_name": "TXIMPORT",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/tximport.nf"
+      },
+       {
+          "name": "drimseq_filter",
+          "toolname": "DRIMSEQ",
+          "operation": "",
+          "inputs": ["TXIMPORT.out_channel.txi_dtu", "TXIMPORT.out_channel.tximport_tx2gene", "csv_input", "min_samps_gene_expr", "min_samps_feature_expr", "min_samps_feature_prop", "min_feature_expr", "min_feature_prop", "min_gene_expr"],
+	  "outputs": ["drimseq_dataset_rds", "drimseq_samples_tsv", "drimseq_counts_tsv"],          
+	  "parameters": [""],
+          "module_name": "DRIMSEQ_FILTER",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/drimseq_filter.nf"
+      },   
+       {
+          "name": "dexseq_dtu",
+          "toolname": "DEXSEQ_DTU",
+          "operation": "dexseq_dtu",
+          "inputs": ["DRIMSEQ_FILTER.out_channel.drimseq_samples_tsv", "DRIMSEQ_FILTER.out_channel.drimseq_counts_tsv", "csv_contrastsheet","n_dexseq_plot"],
+	  "outputs": ["dexseq_exon_dataset_rds", "dexseq_exon_results_rds", "dexseq_exon_results_tsv", "dexseq_gene_results_rds", "dexseq_gene_results_tsv"],          
+	  "parameters": [""],
+          "module_name": "DEXSEQ_DTU",
+          "module_path": "../../../ninon/description_prototype/rnasplice_modules/dexseq_dtu.nf"
+      },
+      {
+         "name": "multiqc",
+         "toolname": "MULTIQC",
+         "operation": "multiqc",
+         "inputs": ["SALMON_QUANT.out_channel.json_info", "TRIMGALORE.out_channel.log", "STAR_ALIGN.out_channel.log_final", "FASTQC.out_channel.zip"],
+         "outputs": ["multiqc_report"],
+         "parameters": [""],
+         "channel_operators": [".collect()", ".collect()", ".collect()", ".collect()"],
+         "module_name": "MULTIQC",
+         "module_path": "../../../ninon/description_prototype/rnasplice_modules/multiqc.nf"
+     }                   
+   ]
+}
+
+
