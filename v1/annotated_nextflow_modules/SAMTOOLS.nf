@@ -1,13 +1,13 @@
 process SAMTOOLS {
-    label 'samtools'
     publishDir params.outdir
-    container "mgibio/samtools:1.9"
+
+    container "biocontainers/samtools:v1.7.0_cv4"
     
     input:
-    tuple val(sample_name), path(sam_file), val(condition)
+    tuple val(sample_name), path(sam_file)
     
     output:
-    path("${sample_name}.sorted.bam"), emit: sample_bam 
+    path("${sam_file}.sorted.bam"), emit: bam 
     
     script:
     """
@@ -17,20 +17,18 @@ process SAMTOOLS {
 }
 
 process SAMTOOLS_MERGE {
-    label 'samtools'
     publishDir params.outdir
-    container "mgibio/samtools:1.9"
+
+    container "biocontainers/samtools:v1.7.0_cv4"
 
     input:
     file out_bam
     
     output:
-    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: merged
+    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: gathered_bam
     
     script:
     """
     samtools merge alignement_gathered.bam ${out_bam}
     """
 }
-
-//samtools view -bS ${sam_file} -@ ${params.threads} | samtools sort -o ${sample_name}.sorted.bam -T tmp  -@ ${params.threads} 

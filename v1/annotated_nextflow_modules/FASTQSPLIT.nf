@@ -7,9 +7,9 @@ workflow FASTQSPLIT{
     
     main:
     SPLIT_READS(reads_channel) \
-	  	 | map { name, fastq, fastq1 -> tuple( groupKey( name, fastq.size()), fastq, fastq1 ) } \
+	  	 | map { name, fastq, fastq1, condition -> tuple( groupKey( name, fastq.size()), fastq, fastq1, condition ) } \
        	 	 | transpose() \
-       	 	 | map { name, fastq, fastq1 -> tuple(name, [fastq, fastq1] ) } \
+       	 	 | map { name, fastq, fastq1, condition -> tuple(name, [fastq, fastq1], condition ) } \
        	 	 | view() \
        		 | set{ split_out }
     
@@ -24,10 +24,10 @@ process SPLIT_READS{
     publishDir params.outdir
     label 'python'
     input:
-    tuple val(name), path(fastq)
+    tuple val(name), path(fastq), val(condition)
 
     output:
-    tuple val(name), path("*${name}*1*.f*q"), path("*${name}*2*.f*q"), emit: split_reads
+    tuple val(name), path("*${name}*1*.f*q"), path("*${name}*2*.f*q"), val(condition), emit: split_reads
 
     shell:
     '''
