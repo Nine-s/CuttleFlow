@@ -113,7 +113,7 @@ class DAW:
         new_daw = replace_tool(self, annotationdb, input_description, self.input)
         #for task in new_daw.tasks:
          #   print(task.name)
-        new_daw = split(self, annotationdb, input_description)
+        new_daw = split(new_daw, annotationdb, input_description)
         return new_daw
 
     def my_print(self):
