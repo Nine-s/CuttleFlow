@@ -10,32 +10,8 @@ from sklearn.preprocessing import PolynomialFeatures
 
 #returns a degree of parallelism from which splitting is reducing runtime
 def min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size):
-    poly = PolynomialFeatures(degree=2)
-    align_scaler = annotation_database.sandardscaler
-    runtime_models = {k.lower(): annotation_database.runtime_estimation_models[k] for k in annotation_database.runtime_estimation_models}
-    align_model = runtime_models[alignment_task.tool.lower()] 
-    
-    wf_characteristics = pd.DataFrame({'dataset_size': [(median_input_size)],
-                                    'RAM': [(ram)], 
-                                    'CPUMHz': [(cpu)], 
-                                    'ref_genome_size': [(ref_size)] })
-
-    normalized_wf_characteristics = align_scaler.transform(wf_characteristics)
-    wf_characteristics_poly = poly.fit_transform(wf_characteristics)
-    wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
-    
-    align_time_no_split = align_model.predict(wf_characteristics_poly)
-
-    
-    split_model = annotation_database.runtime_estimation_models["split_merge"]
-    split_scaler = annotation_database.split_merge_scaler
-    
-    normalized_wf_characteristics = split_scaler.transform(wf_characteristics)
-    wf_characteristics_poly = poly.fit_transform(wf_characteristics)
-    wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
-    
-    split_time = split_model.predict(wf_characteristics_poly)
-
+    align_time_no_split = annotation_database.predict_runtime(alignment_task.tool, ram, cpu, median_input_size)
+    split_time = annotation_database.predict_runtime("split-merge", ram, cpu, median_input_size)
     
     #max alignment runtime after splitting to reduce runtime overall
     max_align_time_split = align_time_no_split - split_time
@@ -43,15 +19,7 @@ def min_beneficial_split(alignment_task, annotation_database, median_input_size,
     #search for split param from where predicted alignment time is beneficial considering the newly added split time
     for i in range(1,100):
         input_size_chunked = median_input_size/i
-        updated_wf_characteristics = pd.DataFrame({'dataset_size': [(input_size_chunked)],
-                                    'RAM': [(ram)], 
-                                    'CPUMHz': [(cpu)], 
-                                    'ref_genome_size': [(ref_size)] })
-        normalized_wf_characteristics = align_scaler.transform(updated_wf_characteristics)
-        wf_characteristics_poly = poly.fit_transform(updated_wf_characteristics)
-        wf_characteristics_poly = poly.transform(normalized_wf_characteristics)
-    
-        align_time_chunked = align_model.predict(wf_characteristics_poly)
+        align_time_chunked = annotation_database.predict_runtime(alignment_task.tool, ram, cpu, input_size_chunked)
         if(align_time_chunked < max_align_time_split):
             return i 
             
