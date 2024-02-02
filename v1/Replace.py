@@ -54,13 +54,13 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
     else:
         return False
 
-def choose_best_tool(list_alt_tools, annot, input_of_daw):
+def choose_best_tool(daw, list_alt_tools, annot, input_of_daw):
     # runtime
     scaler = annot.sandardscaler
-    input_for_prediction = pd.DataFrame({'dataset_size': [(48)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
+    input_for_prediction = pd.DataFrame({'dataset_size': [(max(daw.input.size_of_samples))],
+                                    'RAM': [daw.infra.RAM ], 
+                                    'CPUMHz': [daw.infra.CPU], 
+                                    'ref_genome_size': [(daw.input.size_of_reference_genome_max)] })
     poly = PolynomialFeatures(degree=2)
     normalized_new_data = scaler.transform(input_for_prediction)
     new_data_point_poly = poly.fit_transform(input_for_prediction)
@@ -164,12 +164,12 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
                 reference_size = input_of_daw.size_of_reference_genome_max
                 # print("*******")
                 # print(alternative_tools_list)
-                # alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
+                alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
                 # print(alternative_tools_list)
                 # print("*******")
                 if (len(alternative_tools_list) > 1):
                     replaced = True
-                    final_tool = choose_best_tool(alternative_tools_list, annotations, input_of_daw) #TODO
+                    final_tool = choose_best_tool(daw, alternative_tools_list, annotations, input_of_daw) #TODO
                     # print("######")
                     # print(final_tool.toolname)
                     # print("######")

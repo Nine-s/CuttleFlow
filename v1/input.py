@@ -51,7 +51,7 @@ class Input:
 class Input_of_DAW:  
 
     number_of_samples:int = 0
-    sizes_of_samples:list = []
+    size_of_samples:list = []
     input_samples:list = []
     input_references:list = []
     input_parameters:dict = {}
