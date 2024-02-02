@@ -117,7 +117,7 @@ def split(DAW, annotation_database, input_description):
         ref_size = DAW.input.size_of_reference_genome_max
     
         min_split = min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size)
-        print(min_split)
+        #print(min_split)
         if((DAW.infra.number_nodes<min_split) | (min_split < 1)):
             continue
         split_number = DAW.infra.number_nodes
@@ -152,8 +152,8 @@ def split(DAW, annotation_database, input_description):
         try:
             read_input_align_tool = next(input for input in first_split_task.inputs if input.input_type == "sample")
             read_input_channel = first_split_task.inputs_from_DAW[first_split_task.inputs.index(read_input_align_tool)]
-            print(read_input_channel)
-            print(read_input_align_tool)
+            #print(read_input_channel)
+            #print(read_input_align_tool)
         except StopIteration:
         #samples not direct input of align task: search along DAG to find task that provides preprocessed input
             channeled_inputs = first_split_task.require_input_from
@@ -169,7 +169,10 @@ def split(DAW, annotation_database, input_description):
         split_task_output = split_task.module_name + ".out_channel." + split_task.outputs[0]
         first_split_task.change_input(split_task_output, read_input_align_tool)
         DAW.insert_tasks(split_task) 
-        merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", ("SAMTOOLS_MERGE_" + alignment_task.tool.upper()), module_path + "/SAMTOOLS.nf", input_description, {"channel_operators":[".collect()"], "include_from": "SAMTOOLS_MERGE"})
+        print("###########################")
+        print(alignment_task.tool.upper())
+        print("###########################")
+        merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", ("SAMTOOLS_MERGE_" + alignment_task.tool.upper()), module_path + "/SAMTOOLS.nf", input_description, {"channel_operators":["groupTuple()"], "include_from": "SAMTOOLS_MERGE"})
         merge_task_output = merge_task.module_name + ".out_channel." + merge_task.outputs[0]
         for child_task in child_tasks:
             child_task.change_input(merge_task_output, output_last_split_task)

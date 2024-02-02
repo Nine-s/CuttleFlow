@@ -1,20 +1,20 @@
-process SAMTOOLS {
-    publishDir params.outdir
+// process SAMTOOLS {
+//     publishDir params.outdir
 
-    container "biocontainers/samtools:v1.7.0_cv4"
+//     container "biocontainers/samtools:v1.7.0_cv4"
     
-    input:
-    tuple val(sample_name), path(sam_file)
+//     input:
+//     tuple val(sample_name), path(sam_file)
     
-    output:
-    path("${sam_file}.sorted.bam"), emit: bam 
+//     output:
+//     tuple val(sample_name), path("${sam_file}.sorted.bam"), emit: bam 
     
-    script:
-    """
-    samtools view -bS ${sam_file} | samtools sort -o ${sam_file}.sorted.bam -T tmp  
-    """
+//     script:
+//     """
+//     samtools view -bS ${sam_file} | samtools sort -o ${sam_file}.sorted.bam -T tmp  
+//     """
     
-}
+// }
 
 process SAMTOOLS_MERGE {
     publishDir params.outdir
@@ -22,10 +22,10 @@ process SAMTOOLS_MERGE {
     container "biocontainers/samtools:v1.7.0_cv4"
 
     input:
-    file out_bam
+    tuple val(sample_name), path(out_bam)
     
     output:
-    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: gathered_bam
+    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: merged
     
     script:
     """

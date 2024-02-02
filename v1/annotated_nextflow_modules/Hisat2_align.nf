@@ -10,7 +10,7 @@ process HISAT2_ALIGN {
     path(annotation)
 
     output:
-    path("${reads[0].baseName}*.sam"), emit: sam
+    tuple val(sample_name), path("${reads[0].baseName}*.sam"), emit: sam
     path('*_summary.log')   , emit: log_final
 
     shell:

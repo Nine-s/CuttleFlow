@@ -27,7 +27,7 @@ process SPLIT_READS{
     tuple val(name), path(fastq), val(condition)
 
     output:
-    tuple val(name), path("*${name}*1*.f*q"), path("*${name}*2*.f*q"), val(condition), emit: split_reads
+    tuple val(name), path("*-*${name}*1*.f*q"), path("*-*${name}*2*.f*q"), val(condition), emit: split_reads
 
     shell:
     '''
