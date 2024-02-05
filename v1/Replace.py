@@ -55,40 +55,28 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
         return False
 
 def choose_best_tool(daw, list_alt_tools, annot, input_of_daw):
-    # runtime
-    scaler = annot.sandardscaler
-    input_for_prediction = pd.DataFrame({'dataset_size': [(max(daw.input.size_of_samples))],
-                                    'RAM': [daw.infra.RAM ], 
-                                    'CPUMHz': [daw.infra.CPU], 
-                                    'ref_genome_size': [(daw.input.size_of_reference_genome_max)] })
-    poly = PolynomialFeatures(degree=2)
-    normalized_new_data = scaler.transform(input_for_prediction)
-    new_data_point_poly = poly.fit_transform(input_for_prediction)
-    new_data_point_poly = poly.transform(normalized_new_data)
+    dataset_size = median(daw.input.size_of_samples)
+    ram = daw.infra.RAM
+    cpu = daw.infra.CPU
     list_predicted_runtimes = []
-    list_tools = []
+
     for tool in list_alt_tools:
-        # print(tool.toolname)
-        # print(annot.runtime_estimation_models)
-        # print(list(annot.runtime_estimation_models.keys()))
-        if tool.toolname in annot.runtime_estimation_models:
-            model = annot.runtime_estimation_models[tool.toolname]
-            predicted_runtime = model.predict(new_data_point_poly)
-            list_predicted_runtimes.append(predicted_runtime)
-            list_tools.append(tool)
+        try:
+            list_predicted_runtimes.append(annot.predict_runtime(tool.toolname, ram, cpu, dataset_size))
+        except ValueError:
+            print("No runtime model found for " + tool.toolname + " on most similar cluster.")
+            list_predicted_runtimes.append(float("inf"))
+    
     min_number = min(list_predicted_runtimes)
     min_index = list_predicted_runtimes.index(min_number)
-    best_tool = list_tools[min_index]
-    #print(best_tool.toolname)
+    best_tool = list_alt_tools[min_index]
     return best_tool
 
 def create_new_task(task, new_tool, input_description, operation_):
-    #print(task)
     name = new_tool.toolname + "_" + operation_
     tool = new_tool.toolname
     outputs = task.outputs
     parameters = [] #TODO
-    #operation = operation
     module_path = new_tool.module_path
     module_name = new_tool.module_name#(module_path.split("/")[-1].split(".")[0]).upper()
     inputs_from_DAW = task.inputs_from_DAW
