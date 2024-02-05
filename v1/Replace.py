@@ -54,11 +54,10 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
     else:
         return False
 
-def choose_best_tool(list_alt_tools, annot, input_of_daw):
-    dataset_size = 18.5
-    ram = 256
-    cpu = 2400.0000
-    #TODO: those values should not be fixed, right?
+def choose_best_tool(daw, list_alt_tools, annot, input_of_daw):
+    dataset_size = median(daw.input.size_of_samples)
+    ram = daw.infra.RAM
+    cpu = daw.infra.CPU
     list_predicted_runtimes = []
 
     for tool in list_alt_tools:
@@ -153,12 +152,12 @@ def replace_tool(daw, annotations, input_description, input_of_daw):
                 reference_size = input_of_daw.size_of_reference_genome_max
                 # print("*******")
                 # print(alternative_tools_list)
-                # alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
+                alternative_tools_list = [tool_alt for tool_alt in alternative_tools_list if (is_tool_runnable(tool_alt, RAM, reference_size, tool_alt.RAM_requirements_model))] 
                 # print(alternative_tools_list)
                 # print("*******")
                 if (len(alternative_tools_list) > 1):
                     replaced = True
-                    final_tool = choose_best_tool(alternative_tools_list, annotations, input_of_daw) #TODO
+                    final_tool = choose_best_tool(daw, alternative_tools_list, annotations, input_of_daw) #TODO
                     # print("######")
                     # print(final_tool.toolname)
                     # print("######")

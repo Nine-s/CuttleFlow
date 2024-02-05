@@ -14,6 +14,7 @@ class Infra:
                 list_nodes.append(my_node)
             self.list_nodes:list = list_nodes
             self.RAM = float(list_nodes[0].ram[:-1])
+            self.CPU = float(list_nodes[0].ram[:-1])
             if (len(list_nodes) > 1):
                 #
                 self.threads = median([node.cores for node in list_nodes])
