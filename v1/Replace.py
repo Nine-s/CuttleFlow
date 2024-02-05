@@ -1,6 +1,7 @@
 from task import Task
 import pandas as pd
 from sklearn.preprocessing import PolynomialFeatures
+import statistics
 
 def find_alternative_tool(annotation_db, tool_to_replace):
     alt_tool_list = []
@@ -55,7 +56,7 @@ def is_tool_runnable( tool, RAM, reference_size, model ):
         return False
 
 def choose_best_tool(daw, list_alt_tools, annot, input_of_daw):
-    dataset_size = median(daw.input.size_of_samples)
+    dataset_size = statistics.median(daw.input.size_of_samples)
     ram = daw.infra.RAM
     cpu = daw.infra.CPU
     list_predicted_runtimes = []
