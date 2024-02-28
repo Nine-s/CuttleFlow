@@ -132,6 +132,7 @@ class to_nextflow:
     
     def __init__(self, DAW):
         self.DAW = DAW
+        print("INIT TO_NEXTFLOW")
         self.create_config_file()
         # TODO add docker containers??? add entry in DAW description?
         input_tasks_list = self.write_input_csv(DAW)
@@ -143,7 +144,7 @@ class to_nextflow:
         with open("generated_workflow_modified_reduced/main.nf", "w") as f:
             f.write("")
             f.write(header + workflow)
-
+            f.close()
 
     def write_docker_per_task(self):
         return
