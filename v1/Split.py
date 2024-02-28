@@ -62,15 +62,23 @@ def split(DAW, annotation_database, input_description):
     except StopIteration:
         print("No task with operation \"align\" was found.")
         return DAW
+    is_samtools_task = False
+
+    try:
+        samtools_task = [task for task in DAW.tasks if task.tool.upper() == "SAMTOOLS"][0]
+    except StopIteration:
+        print("No task with \"samtools\" was found.")
+    if(samtools_task):
+        is_samtools_task = True
     
 
     for alignment_task in alignment_tasks:
-        print(alignment_task.module_name)
+        #print(alignment_task.module_name)
         try:
             annotation_aligner = next(aligner for aligner in annotation_database.annotation_db if aligner.toolname.lower() == alignment_task.tool.lower())
         except StopIteration:
             print("No annotation for alignment tool " + str(alignment_task.tool) + " was found.")
-            return DAW    
+            return DAW
         
         
         if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
@@ -94,7 +102,7 @@ def split(DAW, annotation_database, input_description):
         
         #find splittable tasks, first is align
         first_split_task = alignment_task
-        last_split_task = alignment_task
+        last_split_task = samtools_task
         task_splittable = True
     
         while task_splittable == True:
@@ -140,6 +148,10 @@ def split(DAW, annotation_database, input_description):
         print("###########################")
         print(alignment_task.tool.upper())
         print("###########################")
+        #if samtools in tasks
+        # if(is_samtools_task):
+        #     merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", ("SAMTOOLS_MERGE_" + alignment_task.tool.upper()), module_path + "/SAMTOOLS.nf", input_description, {"channel_operators":[".groupTuple()"], "include_from": "SAMTOOLS_MERGE"})
+        #else:
         merge_task = Task("merge", "samtools_merge", [output_last_split_task], ["merged"], [], "merge", ("SAMTOOLS_MERGE_" + alignment_task.tool.upper()), module_path + "/SAMTOOLS.nf", input_description, {"channel_operators":[".groupTuple()"], "include_from": "SAMTOOLS_MERGE"})
         merge_task_output = merge_task.module_name + ".out_channel." + merge_task.outputs[0]
         for child_task in child_tasks:

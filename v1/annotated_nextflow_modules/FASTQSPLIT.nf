@@ -20,9 +20,9 @@ workflow FASTQSPLIT{
     
 process SPLIT_READS{
     container "nfcore/rnaseq:1.4.2"
-  
+    label 'ALL'
     publishDir params.outdir
-    label 'python'
+
     input:
     tuple val(name), path(fastq), val(condition)
 
@@ -32,14 +32,17 @@ process SPLIT_READS{
     shell:
     '''
     zcat "!{fastq[0]}" > "!{name}_1.fastq"
-    zcat "!{fastq[1]}" > "!{name}_2.fastq"
     length=$(wc -l < "!{name}_1.fastq")
     length=$((length / 4))
     s=!{params.split}
     z=$((length / s))
     splitby=$((z + 1))
     "!{params.basedir}/../../../ninon/description_prototype/v1/bin/splitFastq" -i "!{name}_1.fastq" -n "$splitby" -o "!{name}_1"
+    rm !{name}_1.fastq
+    
+    zcat "!{fastq[1]}" > "!{name}_2.fastq"
     "!{params.basedir}/../../../ninon/description_prototype/v1/bin/splitFastq" -i "!{name}_2.fastq" -n "$splitby" -o "!{name}_2"
+    rm !{name}_2.fastq
     '''
 }
 // !{params.basedir}/../bin/splitFastq -i !{fastq[0]} -n ${splitby} -o !{name}_1

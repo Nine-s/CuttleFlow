@@ -17,6 +17,7 @@
 // }
 
 process SAMTOOLS_MERGE {
+    label 'ALL'
     publishDir params.outdir
 
     container "biocontainers/samtools:v1.7.0_cv4"
@@ -25,10 +26,10 @@ process SAMTOOLS_MERGE {
     tuple val(sample_name), path(out_bam)
     
     output:
-    tuple val("alignement_gathered.bam"), path("alignement_gathered.bam"), emit: merged
+    tuple val(sample_name), path("${sample_name}.bam"), emit: merged
     
     script:
     """
-    samtools merge alignement_gathered.bam ${out_bam}
+    samtools merge ${sample_name}.bam ${out_bam}
     """
 }
