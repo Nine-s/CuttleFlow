@@ -1,0 +1,109 @@
+{
+    "tasks": [
+      
+      {
+         "name": "quality_control",
+         "toolname": "FASTQC",
+         "operation": "quality_control",
+         "inputs": ["samples"],
+         "outputs": ["zip"],
+         "parameters": [""],
+         "module_name": "FASTQC_PRE_PREPROCESSING",
+         "include_from": "FASTQC",
+         "module_path": "./modules/fastqc.nf"
+      },
+       {
+          "name": "fastp",
+          "toolname": "FASTP",
+          "operation": "preprocess",
+          "inputs": ["samples"],
+          "outputs": ["reads", "json"],
+          "parameters": [""],
+          "module_name": "FASTP",
+          "module_path": "./modules/fastp_aDNA.nf"
+      },
+	{
+          "name": "adapter_removal",
+          "toolname": "ADAPTER_REMOVAL",
+          "operation": "preprocess",
+          "inputs": ["FASTP.out_channel.reads", "clip_adapters_list"],
+          "outputs": ["reads", "settings"],
+          "parameters": [""],
+          "module_name": "ADAPTER_REMOVAL",
+          "module_path": "./modules/adapter_removal.nf"
+      },
+       {
+          "name": "quality_control",
+          "toolname": "FASTQC",
+          "operation": "quality_control",
+          "inputs": ["ADAPTER_REMOVAL.out_channel.reads"],
+          "outputs": ["zip"],
+          "parameters": [""],
+          "module_name": "FASTQC_POST_PREPROCESSING",
+          "include_from": "FASTQC",
+          "module_path": "./modules/fastqc.nf"
+      },
+       {
+          "name": "bowtie2_index",
+          "toolname": "BOWTIE2",
+          "operation": "index",
+          "inputs": ["fasta"],
+          "outputs": ["index"],
+          "parameters": [""],
+          "module_name": "BOWTIE2_INDEX",
+          "module_path": "./modules/bowtie2_index.nf"
+      },
+       {
+          "name": "bowtie2",
+          "toolname": "BOWTIE2",
+          "operation": "align",
+          "inputs": ["ADAPTER_REMOVAL.out_channel.reads", "fasta", "BOWTIE2_INDEX.out_channel.index"],
+          "outputs": ["bam"],
+          "parameters": [""],
+          "module_name": "BOWTIE2",
+          "module_path": "./modules/bowtie2.nf"
+      },
+       {
+          "name": "samtools_filter",
+          "toolname": "SAMTOOLS",
+          "operation": "filter",
+          "inputs": ["BOWTIE2.out_channel.bam"],
+          "outputs": ["filtered_bam", "unmapped_fastq", "unmapped_bam"],
+          "parameters": [""],
+          "module_name": "SAMTOOLS_FILTER",
+          "module_path": "./modules/samtools_filter.nf"
+      },
+       {
+          "name": "bbduk",
+          "toolname": "BBDUK",
+          "operation": "bbduk",
+          "inputs": ["SAMTOOLS_FILTER.out_channel.unmapped_fastq"],
+          "outputs": ["fastq"],
+          "parameters": [""],
+          "module_name": "BBDUK",
+          "module_path": "./modules/bbduk.nf"
+      },
+       {
+          "name": "malt",
+          "toolname": "MALT",
+          "operation": "malt",
+          "inputs": ["BBDUK.out_channel.fastq", "database"],
+          "channel_operators": [".map {it[1] }.collect()", ""],
+          "outputs": ["rma_malt_extract", "malt_log"],
+          "parameters": [""],
+          "module_name": "MALT",
+          "module_path": "./modules/malt.nf"
+      },
+       {
+          "name": "maltextract",
+          "toolname": "MALT",
+          "operation": "maltextract",
+          "inputs": ["MALT.out_channel.rma_malt_extract", "maltextract_taxon_list", "ncbifiles"],
+          "channel_operators": [".collect()", "", ""],
+          "outputs": ["results"],
+          "parameters": [""],
+          "module_name": "MALTEXTRACT",
+          "module_path": "./modules/malt.nf"
+      }
+   ]
+}

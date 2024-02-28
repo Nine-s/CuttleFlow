@@ -1,4 +1,5 @@
 process MERGE_RESULTS_DEXSEQ {
+    label 'ALL'
     publishDir params.outdir
     container "zavolab/salmon:1.1.0"
 

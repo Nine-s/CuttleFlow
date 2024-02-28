@@ -9,13 +9,14 @@ process SAMTOOLS {
     tuple val(sample_name), path(sam_file)
     
     output:
-    tuple val(sample_name), path("${sam_file}.sorted.bam"), emit: bam 
+    tuple val(sample_name), path("${sam_file.baseName}.sorted.bam"), emit: bam 
     path("alignment_summary.txt"), emit: log
     
     script:
     """
-    samtools view -bS ${sam_file} | samtools sort -o ${sam_file}.sorted.bam -T tmp  
-    samtools view -bS ${sam_file} -@ ${params.threads} | samtools sort -o ${sam_file.baseName}.sorted.bam -T tmp  -@ ${params.threads}
+    samtools flagstat ${sam_file} > alignment_summary.txt
+    samtools view -bS ${sam_file} -@ ${params.threads} | samtools sort -o ${sam_file.baseName}.sorted.bam -T tmp  -@ ${params.threads} 
+    rm ${sam_file}
     """
     
 }
