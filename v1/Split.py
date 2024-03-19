@@ -9,7 +9,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 #returns a degree of parallelism from which splitting is reducing runtime
-def min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size):
+def min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu):
     align_time_no_split = annotation_database.predict_runtime(alignment_task.tool, ram, cpu, median_input_size)
     split_time = annotation_database.predict_runtime("split-merge", ram, cpu, median_input_size)
     
@@ -50,7 +50,12 @@ def find_sample_input(DAW, channeled_inputs):
                 for p in parent_tasks:
                     child_tasks_requirements.extend(p.require_input_from)
           
-
+"""
+input parameters should be:
+- task operation to be split 
+- use annotation to predict runtime yes/no?
+- paths to merge and split tasks (if needed)
+"""
 
 def split(DAW, annotation_database, input_description):
     if ( len(DAW.infra.list_nodes) < len(DAW.input.input_samples) ):
@@ -62,15 +67,7 @@ def split(DAW, annotation_database, input_description):
     except StopIteration:
         print("No task with operation \"align\" was found.")
         return DAW
-    is_samtools_task = False
-
-    try:
-        samtools_task = [task for task in DAW.tasks if task.tool.upper() == "SAMTOOLS"][0]
-    except StopIteration:
-        print("No task with \"samtools\" was found.")
-    if(samtools_task):
-        is_samtools_task = True
-    
+ 
 
     for alignment_task in alignment_tasks:
         #print(alignment_task.module_name)
@@ -81,7 +78,7 @@ def split(DAW, annotation_database, input_description):
             return DAW
         
         
-        if annotation_aligner.is_splittable == False: #if aligner does not support splitting, return DAW (no changes)
+        if annotation_aligner.is_splittable == "False": #if aligner does not support splitting, return DAW (no changes)
             return DAW
 
         median_input_size = statistics.median(DAW.input.size_of_samples)
@@ -90,9 +87,8 @@ def split(DAW, annotation_database, input_description):
         for i, element in enumerate(cpus):
             cpus[i] = int(element.replace("m",""))
         cpu = statistics.median(cpus)
-        ref_size = DAW.input.size_of_reference_genome_max
     
-        min_split = min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu, ref_size)
+        min_split = min_beneficial_split(alignment_task, annotation_database, median_input_size, ram, cpu)
         #print(min_split)
         if((DAW.infra.number_nodes<min_split) | (min_split < 1)):
             continue
@@ -102,7 +98,7 @@ def split(DAW, annotation_database, input_description):
         
         #find splittable tasks, first is align
         first_split_task = alignment_task
-        last_split_task = samtools_task
+        last_split_task = alignment_task
         task_splittable = True
     
         while task_splittable == True:
@@ -110,9 +106,10 @@ def split(DAW, annotation_database, input_description):
             next_tasks = [task for task in DAW.tasks if [requirement for requirement in task.require_input_from if output_last_split_task.match(requirement)] != []]
             if next_tasks != []:    
                 for task in next_tasks:
+                    print(task.tool)
                     annotation_next_task = [annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool]
                     if annotation_next_task != []:
-                        if annotation_next_task.is_splittable == True:
+                        if annotation_next_task[0].is_splittable == "True":
                             last_split_task = task 
                             task_splittable = True
                             continue              

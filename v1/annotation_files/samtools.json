@@ -1,0 +1,9 @@
+{
+    "toolname": "SAMTOOLS",
+    "operation": "sort_convert",
+    "is_splittable": "True",
+    "mendatory_input_list": ["sam"],
+    "output_list": ["bam"],
+    "module_path": "module_path",
+    "module_name": "SAMTOOLS"
+}
