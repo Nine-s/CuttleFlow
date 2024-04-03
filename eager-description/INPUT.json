@@ -1,0 +1,217 @@
+{
+   "samples": [
+
+     {
+        "name": "FRT511A-Un",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/data_eager/SRR7774470_1.fastq.gz",
+        "path_r2": "/workspace/ninon/data_eager/SRR7774470_2.fastq.gz",
+        "strand": "unstranded",
+        "uncompressed_size": "12",
+        "condition": ""
+     },
+     {
+        "name": "FRT504-Un",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/data_eager/SRR7774471_1.fastq.gz",
+        "path_r2": "/workspace/ninon/data_eager/SRR7774471_2.fastq.gz",
+        "strand": "unstranded",
+        "uncompressed_size": "15",
+        "condition": ""
+     },
+     {
+        "name": "PPC529-UnB",
+        "type": "reads",
+        "path_r1": "/workspace/ninon/data_eager/SRR7774472_1.fastq.gz",
+        "path_r2": "/workspace/ninon/data_eager/SRR7774472_2.fastq.gz",
+        "strand": "unstranded",
+        "uncompressed_size": "22",
+        "condition": ""
+     },
+     {
+      "name": "PPC529-Pr",
+      "type": "reads",
+      "path_r1": "/workspace/ninon/data_eager/SRR7774473_1.fastq.gz",
+      "path_r2": "/workspace/ninon/data_eager/SRR7774473_2.fastq.gz",
+      "strand": "unstranded",
+      "uncompressed_size": "23",
+      "condition": ""
+      },
+      {
+      "name": "TS211F-UnA",
+      "type": "reads",
+      "path_r1": "/workspace/ninon/data_eager/SRR7774474_1.fastq.gz",
+      "path_r2": "/workspace/ninon/data_eager/SRR7774474_2.fastq.gz",
+      "strand": "unstranded",
+      "uncompressed_size": "23",
+      "condition": ""
+      },
+      {
+      "name": "PPC529-UnA",
+      "type": "reads",
+      "path_r1": "/workspace/ninon/data_eager/SRR7774475_1.fastq.gz",
+      "path_r2": "/workspace/ninon/data_eager/SRR7774475_2.fastq.gz",
+      "strand": "unstranded",
+      "uncompressed_size": "21",
+      "condition": ""
+      },
+      {
+      "name": "TS211A-Un",
+      "type": "reads",
+      "path_r1": "/workspace/ninon/data_eager/SRR7774476_1.fastq.gz",
+      "path_r2": "/workspace/ninon/data_eager/SRR7774476_2.fastq.gz",
+      "strand": "unstranded",
+      "uncompressed_size": "14",
+      "condition": ""
+      },
+      {
+      "name": "PPC524-Un",
+      "type": "reads",
+      "path_r1": "/workspace/ninon/data_eager/SRR7774477_1.fastq.gz",
+      "path_r2": "/workspace/ninon/data_eager/SRR7774477_2.fastq.gz",
+      "strand": "unstranded",
+      "uncompressed_size": "17",
+      "condition": ""
+      }
+      
+   ],
+
+   "references": [
+    {
+       "name": "annotation_gtf",
+       "path": "/workspace/ninon/data/Mus_musculus.GRCm39.111.gtf",
+       "reference_type": "annotation",
+       "uncompressed_size": "0.840"
+    },
+
+    {
+       "name": "genome",
+       "path": "/workspace/ninon/data/Mus_musculus.GRCm39.dna.toplevel.fa",
+       "reference_type": "genome",
+       "uncompressed_size": "2.6"
+    },
+
+    {
+       "name": "transcripts_fasta",
+       "path": "/workspace/ninon/data/Drosophila_melanogaster.BDGP6.32.cdna.all.fa",
+       "reference_type": "transcriptome",
+       "uncompressed_size": "0.237"
+    }
+ ],
+ 
+ "parameters": [
+   {
+    "name": "basedir",
+    "value": "/workspace/projects/Nine-s/eager" 
+   },
+   {
+    "name": "outdir",
+    "value": "/workspace/ninon/data/results/"
+    },
+   {
+     "name": "metagenomic_min_support_reads",
+     "value": 1
+   },
+   {
+     "name": "complexity_filter_poly_g_min",
+     "value": 10
+   },     
+   {
+     "name": "clip_adapters_list",
+     "value": "/workspace/ninon/data/adapter-list.txt"
+   },
+   {
+     "name": "clip_forward_adaptor",
+     "value": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC"
+   },
+   {
+     "name": "clip_reverse_adaptor",
+     "value": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA"
+   },
+   {
+     "name": "preserve5p",
+     "value": false
+   },
+   {
+     "name": "skip_collapse",
+     "value": false
+   },
+   {
+     "name": "skip_trim",
+     "value": false
+   },
+   {
+     "name": "mergedonly",
+     "value": false
+   },
+   {
+     "name": "qualitymax",
+     "value": 41
+   },
+   {
+     "name": "clip_readlength",
+     "value": 30
+   },
+   {
+     "name": "clip_min_read_quality",
+     "value": 20
+   },
+   {
+     "name": "min_adap_overlap",
+     "value": 1
+   },
+   {
+     "name": "clip_min_read_quality",
+     "value": 20
+   },
+   {
+     "name": "bt2_alignmode",
+     "value": "local"
+   },
+   {
+     "name": "bt2_sensitivity",
+     "value": "sensitive"
+   },
+   {
+     "name": "bt2n",
+     "value": 0
+   },
+   {
+     "name": "bt2l",
+     "value": 0
+   },
+   {
+     "name": "bt2_trim5",
+     "value": 0
+   },
+   {
+     "name": "bt2_trim3",
+     "value": 0
+   },
+   {
+     "name": "bt2_maxins",
+     "value": 500
+   },
+   {
+     "name": "metagenomic_complexity_entropy",
+     "value": 0.3
+   },
+   {
+     "name": "bam_unmapped_type",
+     "value": "discard"
+   },
+   {
+     "name": "bam_filter_minreadlength",
+     "value": 0
+   },
+   {
+     "name": "bam_mapping_quality_threshold",
+     "value": 0
+   },
+   {
+    "name": "large_ref",
+    "value": false
+   }  
+ ]
+ 
+}
