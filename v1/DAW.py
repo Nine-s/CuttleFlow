@@ -81,7 +81,9 @@ class DAW:
         return tasks_priority
         
     def insert_tasks(self, new_tasks):
+        print(self.tasks)
         self.tasks.append(new_tasks)
+        print(self.tasks)
         self.tasks_priority = self.define_tasks_priority()
     
     # Creates a DAW object from the description 
@@ -108,10 +110,18 @@ class DAW:
         # define their priority
         self.tasks_priority = self.define_tasks_priority() 
         #self.rewrite(annotDB, input_description)
-    
-    def rewrite(self, annotationdb, input_description):
+
+    def rewrite(self, annotationdb, input_description, split_merge_annotation):
         new_daw = replace_tool(self, annotationdb, input_description, self.input)
-        new_daw = split(new_daw, annotationdb, input_description)
+        for key in split_merge_annotation:
+            split_merge_tasks = split_merge_annotation[key]
+            operation_to_split = split_merge_tasks["operation"]
+            align_operation = split_merge_tasks["align_operation"]
+            ref_type = split_merge_tasks["reference_type"]
+            merge_task = split_merge_tasks["merge"]
+            split_task = split_merge_tasks["split"]
+            new_daw = split(new_daw, annotationdb, input_description, operation_to_split, align_operation, \
+                            ref_type, split_task, merge_task)
         return new_daw
 
     def my_print(self):

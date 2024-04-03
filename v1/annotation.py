@@ -203,22 +203,26 @@ class ToolAnnotation:
     
         self.toolname = tool_description["toolname"]
         self.operation = tool_description["operation"]
-        self.domain_specific_features = tool_description["domain_specific_features"]
+        if self.operation == "align":
+            self.domain_specific_features = tool_description["domain_specific_features"]
+            reference_sizes = []
+            ram_used = []
+            for resource_requirements in tool_description["resource_requirements_RAM"]:
+                RAM_require = resource_requirements["RAM"].split("GB")[0][:-1]
+                ref_size = resource_requirements["reference_size"][:-1]
+                reference_sizes.append(float(ref_size))
+                ram_used.append(float(RAM_require)) #in GB
+            self.RAM_requirements_model = self.create_resource_requirements_RAM(reference_sizes, ram_used)
+
+        
         self.is_splittable = tool_description["is_splittable"]
+        
         self.mendatory_input_list = tool_description["mendatory_input_list"]
         #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
         self.module_path =  tool_description["module_path"]
         self.module_name =  tool_description["module_name"]
-        reference_sizes = []
-        ram_used = []
-        for resource_requirements in tool_description["resource_requirements_RAM"]:
-            RAM_require = resource_requirements["RAM"].split("GB")[0][:-1]
-            ref_size = resource_requirements["reference_size"][:-1]
-            reference_sizes.append(float(ref_size))
-            ram_used.append(float(RAM_require)) #in GB
-        self.RAM_requirements_model = self.create_resource_requirements_RAM(reference_sizes, ram_used)
-
+        
 
 """
  #TODO: test cases must be rewritten
