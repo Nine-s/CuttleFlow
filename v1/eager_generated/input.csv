@@ -1,0 +1,7 @@
+sample,path_r1,path_r2,condition
+FRT511A-Un,/workspace/ninon/data_eager/SRR7774470_1.fastq.gz,/workspace/ninon/data_eager/SRR7774470_2.fastq.gz,
+FRT504-Un,/workspace/ninon/data_eager/SRR7774471_1.fastq.gz,/workspace/ninon/data_eager/SRR7774471_2.fastq.gz,
+PPC529-UnB,/workspace/ninon/data_eager/SRR7774472_1.fastq.gz,/workspace/ninon/data_eager/SRR7774472_2.fastq.gz,
+PPC529-Pr,/workspace/ninon/data_eager/SRR7774473_1.fastq.gz,/workspace/ninon/data_eager/SRR7774473_2.fastq.gz,
+TS211F-UnA,/workspace/ninon/data_eager/SRR7774474_1.fastq.gz,/workspace/ninon/data_eager/SRR7774474_2.fastq.gz,
+PPC529-UnA,/workspace/ninon/data_eager/SRR7774475_1.fastq.gz,/workspace/ninon/data_eager/SRR7774475_2.fastq.gz,
