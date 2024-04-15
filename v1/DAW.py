@@ -116,11 +116,11 @@ class DAW:
         for key in split_merge_annotation:
             split_merge_tasks = split_merge_annotation[key]
             operation_to_split = split_merge_tasks["operation"]
-            align_operation = split_merge_tasks["align_operation"]
+            is_align_operation = split_merge_tasks["align_operation"]
             ref_type = split_merge_tasks["reference_type"]
             merge_task = split_merge_tasks["merge"]
             split_task = split_merge_tasks["split"]
-            new_daw = split(new_daw, annotationdb, input_description, operation_to_split, align_operation, \
+            new_daw = split(new_daw, annotationdb, input_description, operation_to_split, is_align_operation, \
                             ref_type, split_task, merge_task)
         return new_daw
 

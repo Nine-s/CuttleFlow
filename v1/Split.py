@@ -30,7 +30,6 @@ def min_beneficial_split(alignment_task, annotation_database, median_input_size,
     
     #return ReLU of min_split, when min_split is negative, splitting increases runtime
 
-
 def find_split_input(DAW, channeled_inputs, split_input_type):
     for c_input in channeled_inputs:
         finished = False
@@ -64,12 +63,29 @@ def find_split_input(DAW, channeled_inputs, split_input_type):
             for p in parent_tasks:
                 child_tasks_requirements.extend(p.require_input_from)
           
-"""
-input parameters should be:
-x task operation to be split 
-x use annotation to predict runtime yes/no?
---> paths to merge and split tasks (if needed)
-"""
+def find_last_split_task(DAW, annotation_database, align_task):
+    last_split_task = align_task
+    task_splittable = True
+      
+    while task_splittable == True:
+        output_last_split_task = re.compile(last_split_task.module_name + ".out_channel.*")
+        next_tasks = [task for task in DAW.tasks if [requirement for requirement in task.require_input_from if output_last_split_task.match(requirement)] != []]
+        if next_tasks != []:    
+            for task in next_tasks:
+                print(task.tool)
+                annotation_next_task = [annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool]
+                if annotation_next_task != []:
+                    if annotation_next_task[0].is_splittable == "True":
+                        last_split_task = task 
+                        task_splittable = True
+                        continue              
+                    else:
+                        task_splittable = False 
+                else: 
+                    task_splittable = False
+        else: #no next task found
+            task_splittable = False       
+    return last_split_task
 
 def split(DAW, annotation_database, input_description, split_operation, predict_runtime, input_type_split, i_split_task, i_merge_task=None):
     
@@ -95,7 +111,9 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
             
             if annotation_split.is_splittable == "False": #if tool does not support splitting, return DAW (no changes)
                 raise ToolException("Tool " + str(to_split_task.tool) + " is not splittable according to the annotation database.")
+            
             if predict_runtime == "True":
+                #predict runtime of alignment task(s) using annotation database 
                 median_input_size = statistics.median(DAW.input.size_of_samples)
                 ram = DAW.infra.RAM
                 cpus = [node.cpu for node in DAW.infra.list_nodes]
@@ -113,34 +131,13 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
             
             #find splittable tasks, first is align
             first_split_task = to_split_task
-            last_split_task = to_split_task
-            task_splittable = True
-        
-            while task_splittable == True:
-                output_last_split_task = re.compile(last_split_task.module_name + ".out_channel.*")
-                next_tasks = [task for task in DAW.tasks if [requirement for requirement in task.require_input_from if output_last_split_task.match(requirement)] != []]
-                if next_tasks != []:    
-                    for task in next_tasks:
-                        print(task.tool)
-                        annotation_next_task = [annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool]
-                        if annotation_next_task != []:
-                            if annotation_next_task[0].is_splittable == "True":
-                                last_split_task = task 
-                                task_splittable = True
-                                continue              
-                            else:
-                                task_splittable = False 
-                        else: 
-                            task_splittable = False
-                else: #no next task found
-                    task_splittable = False       
+            last_split_task = find_last_split_task(DAW, annotation_database, to_split_task)       
 
             output_last_split_task = last_split_task.module_name + ".out_channel." + last_split_task.outputs[0]
             child_tasks = [task for task in DAW.tasks if output_last_split_task in task.require_input_from]
             
             try:
                 input_to_split = next(input for input in first_split_task.inputs if input.input_type == input_type_split)
-                input_to_split_channel = first_split_task.inputs_from_DAW[first_split_task.inputs_from_DAW.index(input_to_split.name)]
                 
             except StopIteration:
             #samples not direct input of align task: search along DAG to find task that provides preprocessed input
@@ -148,34 +145,21 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
                 print(channeled_inputs)
                 split_input_channel = find_split_input(DAW, channeled_inputs, input_type_split)
                 input_to_split = split_input_channel
-                input_to_split_channel = first_split_task.inputs_from_DAW[first_split_task.inputs_from_DAW.index(input_to_split)]
-            full_module_path = first_split_task.module_path
-        
-            last_slash_index = full_module_path.rfind("/")
-            module_path = full_module_path[:last_slash_index]
-
-
-            split_task = Task("split", "fastqsplit", [input_to_split_channel], ["split_reads"], [], "split", ("FASTQSPLIT_" + to_split_task.tool.upper()),  module_path + "/FASTQSPLIT.nf", input_description, {"include_from": "FASTQSPLIT"}) 
-            split_task_output = split_task.module_name + ".out_channel." + split_task.outputs[0]
-            first_split_task.change_input(split_task_output, input_to_split)
             
+            #insert split task
             add_s_inputs = {}
             if "channel_operators" in i_split_task:
                 add_s_inputs["channel_operators"] = i_split_task["channel_operators"]
-            print(add_s_inputs)
-            print(i_split_task)
             add_s_inputs["include_from"] = i_split_task["module_name"]
             split_task = Task(i_split_task["name"], i_split_task["tool"], [input_to_split], i_split_task["outputs"],\
                              i_split_task["parameters"], i_split_task["operation"], \
                             (i_split_task["module_name"] + "_" + to_split_task.tool.upper()), i_split_task["module_path"], \
                             input_description, add_s_inputs)
-            print(split_task)
-            for task in DAW.tasks:
-                print(task.name)
             DAW.insert_tasks(split_task) 
-            print("###########################")
-            print(to_split_task.tool.upper())
-            print("###########################")
+            split_task_output = split_task.module_name + ".out_channel." + split_task.outputs[0]
+            first_split_task.change_input(split_task_output, input_to_split)
+
+            #insert merge task if provided
             if(i_merge_task!=None):  
                 add_m_inputs = {}
                 if "channel_operators" in i_merge_task:
