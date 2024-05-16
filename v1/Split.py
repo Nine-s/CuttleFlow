@@ -39,29 +39,31 @@ def find_split_input(DAW, channeled_inputs, split_input_type):
         print(task.operation)
         print(task.inputs)
         print(task.input_description)
+        print(task.inputs_from_DAW)
+        print(task.require_input_from)
         for i in task.inputs:
             print(i)
             print(i.input_type)
             print(i.paths)
             if i.input_type==split_input_type:
                 return c_input
-            child_task_requirements = task.require_input_from
+        child_task_requirements = task.require_input_from
+        print(child_task_requirements)
             #return c_input
         while (finished == False) & (no_parents == False):
             parent_tasks = [task for task in DAW.tasks if task.module_name in [req.split(".")[0] for req in child_task_requirements]]
             print(parent_tasks)
-            print("F")
             if parent_tasks == []:
                 no_parents = True
                 #check for all parent tasks whether one of the has samples as input
             for index, p in enumerate(parent_tasks):     
                 for i in p.inputs:
                     if i.input_type==split_input_type:
-                        return child_tasks_requirements[index]
+                        return c_input
                 #otherwise: set child = parents to prepare next loop iteration
             child_tasks_requirements = []
             for p in parent_tasks:
-                child_tasks_requirements.extend(p.require_input_from)
+                child_task_requirements.extend(p.require_input_from)
           
 def find_last_split_task(DAW, annotation_database, align_task):
     last_split_task = align_task
@@ -100,7 +102,6 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
         print('No task with operation "' + split_operation + '" was found.')
         return DAW
  
-
     for to_split_task in to_split_tasks:
         try:
             #print(alignment_task.module_name)
@@ -111,7 +112,7 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
             
             if annotation_split.is_splittable == "False": #if tool does not support splitting, return DAW (no changes)
                 raise ToolException("Tool " + str(to_split_task.tool) + " is not splittable according to the annotation database.")
-            
+
             if predict_runtime == "True":
                 #predict runtime of alignment task(s) using annotation database 
                 median_input_size = statistics.median(DAW.input.size_of_samples)
@@ -174,7 +175,7 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
                     child_task.change_input(merge_task_output, output_last_split_task)
                 DAW.insert_tasks(merge_task)
         except ToolException:
-            continue
+            return DAW
         return DAW
         
     
