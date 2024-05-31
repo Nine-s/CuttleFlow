@@ -1,0 +1,69 @@
+{  
+   "bandwidth":"X",
+   "nodes": [
+
+    {
+       "name": "node01",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node02",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node03",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node04",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node05",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node06",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node07",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    },
+
+    {
+       "name": "node08",
+       "RAM": "256G",
+       "cores":"16",
+       "CPU":"2400m"
+       
+    }
+ ]
+}

@@ -17,6 +17,7 @@ for i in os.listdir(annotation_path):
         #print(full_path)
 annotDB = AnnotationDB(annotation_files)
 
+
 with open('../test/rnasplice-description/INFRA.json') as jsonfile:
     infra_description = json.load(jsonfile)
 
@@ -25,6 +26,7 @@ with open('../test/rnasplice-description/DAW.json') as jsonfile:
 
 with open('../test/rnasplice-description/SPLIT_MERGE_TASKS.json') as jsonfile:
     split_merge_tasks = json.load(jsonfile)
+
 
 with open('../test/rnasplice-description/INPUT_EVAL_REDUCED.json') as jsonfile:
     input_description = json.load(jsonfile)
