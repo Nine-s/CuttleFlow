@@ -1,0 +1,5 @@
+sample,path_r1,path_r2,condition
+DGRP_Line_370_Male_Isolated_Rep2,/workspace/ninon/sra/ERR12030556_1.fastq.gz,/workspace/ninon/sra/ERR12030556_2.fastq.gz,isolated
+DGRP_Line_370_Male_Isolated_Rep1,/workspace/ninon/sra/ERR12030555_1.fastq.gz,/workspace/ninon/sra/ERR12030555_2.fastq.gz,isolated
+DGRP_Line_370_Male_Group_Rep2,/workspace/ninon/sra/ERR12030554_1.fastq.gz,/workspace/ninon/sra/ERR12030554_2.fastq.gz,group
+DGRP_Line_370_Male_Group_Rep1,/workspace/ninon/sra/ERR12030553_1.fastq.gz,/workspace/ninon/sra/ERR12030553_2.fastq.gz,group

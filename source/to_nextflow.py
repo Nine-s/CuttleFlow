@@ -1,9 +1,10 @@
 import pandas as pd
 from itertools import chain
 import os
-class to_nextflow:
 
+class to_nextflow:
     DAW = None
+    PATH_TO_DAW = "generated_workflow/"
 
     def write_workflow(self, input_tasks_list):
         start = """\nworkflow{
@@ -13,25 +14,18 @@ class to_nextflow:
             .map {row -> tuple(row.sample, [row.path_r1, row.path_r2], row.condition)}
             .view()
         """
-        #.map {row -> tuple(row.sampleName, [row.fastq1, row.fastq2], row.strand)}
         end = "\n}"
         core = self.write_core_workflow(input_tasks_list)
         return start + core + end
 
     def write_core_workflow(self, input_tasks_list):
         core = "\n"
-        # declare strandedness env variable
         tasks = self.DAW.tasks
         for i in range(len(tasks)):
             priority_index = self.DAW.tasks_priority.index(i)
             tmp_task = tasks[priority_index]
             tmp = str(tmp_task.module_name) + "(" 
             for index, my_input in enumerate(tmp_task.inputs_task):
-                # print("####")
-                # print(my_input)
-                # print(input_tasks_list)
-                # print("#######")
-                #if((".out" not in my_input) and (my_input in input_tasks_list)): 
                 if (my_input == "samples"):
                         tmp += "read_pairs_ch"            
                 elif((".out" not in my_input) and (my_input != "reads")):
@@ -48,7 +42,6 @@ class to_nextflow:
             core += tmp
         return core
     
-    # TODO: check if module path exists. Here?
     def generate_include_modules(self):
         include_string = ""
         include_dictionnary = {}
@@ -70,16 +63,10 @@ class to_nextflow:
         return include_string    
 
 
-    def write_docker_per_task(self):
-
-        return
-
     def create_config_file(self):
-        #read default manifest in resources folder
         with open("./resources/default_nextflow_config.config") as f:
             base_config = f.read()
-#        with open("nextflow.config", "w"):
-#            pass
+
         params_string = "\n\nparams {\n"
         params_string += "\tstrand = " + "'" + self.DAW.input.first_strand + "'\n"
         params_string += "\toutdir = 'results'\n"
@@ -87,10 +74,6 @@ class to_nextflow:
         for ref in self.DAW.input.input_references:
             params_string += "\t"+ str(ref.name) + " = '"+ str(ref.paths[0]) + "'\n"
 
-        # print(_input.input_type)
-        #         if ("reference" in _input.input_type):
-        #             print("ok")
-        #             params_string += "\t" + _input.name + " = '" + _input.paths[0] + "'\n"  
         for i in range(len(self.DAW.tasks)):
             task_inputs = self.DAW.tasks[i].inputs
             for j in range(len(task_inputs)):
@@ -102,12 +85,11 @@ class to_nextflow:
             value = self.DAW.input.input_parameters[input_param]
             params_string += "\t" + input_param + " = " + str(value) + "\n"
         params_string += "\tthreads = " + str(self.DAW.infra.threads) + "\n"
-        params_string += "\tbasedir = '" + os.popen('pwd').read().strip() + "/generated_workflow_modified_reduced'\n"
+        params_string += "\tbasedir = '" + os.popen('pwd').read().strip() + "/generated_workflow'\n"
         params_string += "}\n"
-        with open('./generated_workflow_modified_reduced/nextflow.config', 'w') as config_file:
+        with open(self.PATH_TO_DAW +'/nextflow.config', 'w') as config_file:
             config_file.write(base_config + params_string)
             config_file.close()
-        #TODO: add threads #params_string += ("threads = " + str(self.DAW.infra.threads) + "\n") 
     
     def write_input_csv(self, DAW):
         mandatory_columns = ['sample', 'path_r1', 'path_r2']
@@ -126,25 +108,21 @@ class to_nextflow:
                     additional_values.append("")
             df.loc[i] = mandatory_values + additional_values
             input_tasks_list.append(inputDAW.name)
-        df.to_csv("generated_workflow_modified_reduced/input.csv", index=False)
+        df.to_csv(self.PATH_TO_DAW +"input.csv", index=False)
         return input_tasks_list
 
     
     def __init__(self, DAW):
         self.DAW = DAW
-        print("INIT TO_NEXTFLOW")
         self.create_config_file()
-        # TODO add docker containers??? add entry in DAW description?
         input_tasks_list = self.write_input_csv(DAW)
         nextflow_header = "nextflow.enable.dsl = 2\n"
         include = self.generate_include_modules()
         header = nextflow_header + "\n\n" + include
         workflow = self.write_workflow(input_tasks_list)
-        ##task that generate input channels
-        with open("generated_workflow_modified_reduced/main.nf", "w") as f:
+        with open(self.PATH_TO_DAW +"main.nf", "w") as f:
             f.write("")
             f.write(header + workflow)
             f.close()
+        print("Workflow written in the folder: "+ self.PATH_TO_DAW)
 
-    def write_docker_per_task(self):
-        return

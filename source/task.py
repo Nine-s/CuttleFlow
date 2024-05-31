@@ -48,8 +48,6 @@ class Task:
             old_input_position = self.inputs.index(old_input)
             self.inputs.pop(old_input_position)
         elif isinstance(old_input, str) and ".out" in old_input:
-            print(self.require_input_from)
-            print(old_input)
             self.require_input_from.remove(old_input)
             old_input_position = self.inputs_task.index(old_input)
             self.inputs_task[old_input_position] = new_input

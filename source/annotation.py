@@ -11,6 +11,12 @@ from matplotlib import pyplot as plt
 from scipy.optimize import nnls
 from scipy.spatial import distance
 
+import warnings
+
+# warnings.filterwarnings("error", category=pd.core.common.SettingWithCopyWarning)
+warnings.filterwarnings("ignore", category=pd.core.common.SettingWithCopyWarning)
+
+
 class AnnotationDB:  
 
     annotation_db:list = []
@@ -25,13 +31,11 @@ class AnnotationDB:
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
 
         aligners = (df_runtime.columns[6:])
-        #print(aligners)
         infrastructures = set(df_runtime.infrastructure.tolist())
 
 
         columns_to_normalize = ['dataset_size']
         dataset_sizes = df_runtime[columns_to_normalize]
-        print(dataset_sizes)
         ram_values = df_runtime[["RAM"]]
         cpu_values = df_runtime[["CPUMHz"]]
         
@@ -59,6 +63,7 @@ class AnnotationDB:
             #X_normalized.reset_index(inplace=True)
             df_infra.reset_index(inplace=True)
             df_normalized = pd.DataFrame(X_normalized, columns=columns_to_normalize)
+            df_infra = df_infra.copy()
             df_infra.loc[:, columns_to_normalize] = df_normalized
             
             for aligner in aligners:
@@ -84,7 +89,7 @@ class AnnotationDB:
         df_runtime = pd.read_csv(runtime_measured, delimiter=",")
 
         for infra in self.runtime_estimation_models:
-            print(infra)
+            #print(infra)
             df_infra = df_runtime[df_runtime.infrastructure == infra]
             if df_infra.empty:
                 print("No annotation data to fit a runtime estimation model for split-merge-processes for infrastructure " + infra)
@@ -102,8 +107,8 @@ class AnnotationDB:
                 X_poly = poly.fit_transform(X)
                 model = LinearRegression()
                 model.fit(X_poly, y)
-                print(model.coef_)
-                print("______")
+                # print(model.coef_)
+                # print("______")
                 self.runtime_estimation_models[infra]["split-merge"] = model
         return None
 
@@ -131,12 +136,15 @@ class AnnotationDB:
         align_scaler = self.dataset_scaler
         infra_runtime_models = self.runtime_estimation_models[most_similar_infrastructure]
         runtime_models = {k.lower(): infra_runtime_models[k] for k in infra_runtime_models}
-        task_runtime_model = runtime_models[task_name.lower()] 
-        scaled_dataset_size = align_scaler.transform(np.array(dataset_size).reshape(-1, 1))
-        model_input = poly.fit_transform(scaled_dataset_size)
-        estimated_task_time = task_runtime_model.predict(model_input)
+        if (task_name.lower() in runtime_models):
+            task_runtime_model = runtime_models[task_name.lower()] 
+            scaled_dataset_size = align_scaler.transform(np.array(dataset_size).reshape(-1, 1))
+            model_input = poly.fit_transform(scaled_dataset_size)
+            estimated_task_time = task_runtime_model.predict(model_input)
 
-        return estimated_task_time
+            return estimated_task_time
+        else:
+            return 
 
 
         
@@ -162,9 +170,7 @@ class AnnotationDB:
 
         annotation_db = []
         for file_path in annotation_files_list:
-            with open(file_path) as json_file:
-                #print(file_path)                
-
+            with open(file_path) as json_file:           
                 tool_annotated = ToolAnnotation(json.load(json_file))
             annotation_db.append(tool_annotated)
         self.annotation_db = annotation_db
@@ -185,16 +191,11 @@ class ToolAnnotation:
     def create_resource_requirements_RAM (reference_sizes, ram_used):
         df = pd.DataFrame({'reference_sizes': reference_sizes, 'ram_used': ram_used })
         df.head()
-        X = df.iloc[:,:-1].values # feature matrix: reference_sizes
-        y = df.iloc[:,1].values # response vector: ram_used
+        X = df.iloc[:,:-1].values
+        y = df.iloc[:,1].values 
 
         model = LinearRegression()
         model.fit(X, y)
-
-        ###plot
-        # plt.scatter(X, y,color='g')
-        # plt.plot(X, model.predict(X),color='k')
-        # plt.show()
 
         return model
     
@@ -218,101 +219,7 @@ class ToolAnnotation:
         self.is_splittable = tool_description["is_splittable"]
         
         self.mendatory_input_list = tool_description["mendatory_input_list"]
-        #self.optional_inputs_list = tool_description["optional_inputs_list"]
         self.output_list = tool_description["output_list"]
         self.module_path =  tool_description["module_path"]
         self.module_name =  tool_description["module_name"]
         
-
-"""
- #TODO: test cases must be rewritten
-            test = False
-            if(aligner == "Salmon" and test is True):
-                print("SALMON")
-                #test 2 with FONDA cluster: D1
-                new_data = pd.DataFrame({'dataset_size': [(3.5)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 1")
-                print("real runtime: 8.3"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-                #test 2 with FONDA cluster: D2
-                new_data = pd.DataFrame({'dataset_size': [(13)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 2")
-                print("real runtime: 8.3"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-                #test 2 with FONDA cluster: D3
-                new_data = pd.DataFrame({'dataset_size': [(48)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 3")
-                print("real runtime: 81"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-            if(aligner == "HISAT2" and test is True):
-                print("HISAT2")
-                #test 2 with FONDA cluster: D1
-                new_data = pd.DataFrame({'dataset_size': [(3.5)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 1")
-                print("real runtime: 292"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-                #test 2 with FONDA cluster: D2
-                new_data = pd.DataFrame({'dataset_size': [(13)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 2")
-                print("real runtime: 1178.1"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-                #test 2 with FONDA cluster: D3
-                new_data = pd.DataFrame({'dataset_size': [(48)],
-                                    'RAM': [(251)], 
-                                    'CPUMHz': [(3400.0000)], 
-                                    'ref_genome_size': [(0.137)] })
-                normalized_new_data = scaler.transform(new_data)
-
-                new_data_point_poly = poly.transform(normalized_new_data)
-                predicted_runtime = model.predict(new_data_point_poly)
-                print("$$$$ test 3")
-                print("real runtime: 3916"  )
-                print("predicted runtime: "+ str(predicted_runtime))
-
-        #    dataset_size = df[["dataset_size"]]
-        #     plt.scatter(dataset_size, y, label=aligner)
-        #     plt.plot(dataset_size, model.predict(X_poly))
-        #     plt.legend()
-        # plt.title('Aligner: '+ aligner)
-        # plt.show()
-"""
