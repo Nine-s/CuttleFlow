@@ -1,0 +1,9 @@
+{
+    "toolname": "BOWTIE2",
+    "operation": "align_dna",
+    "is_splittable": "True",
+    "mendatory_input_list": ["reads", "fasta", "index"],
+    "output_list": ["sam"],
+    "module_path": "module_path",
+    "module_name": "BOWTIE2"
+}
