@@ -108,19 +108,21 @@ class to_nextflow:
                     additional_values.append("")
             df.loc[i] = mandatory_values + additional_values
             input_tasks_list.append(inputDAW.name)
-        df.to_csv(self.PATH_TO_DAW +"input.csv", index=False)
+        df.to_csv(self.PATH_TO_DAW +"/input.csv", index=False)
         return input_tasks_list
 
     
-    def __init__(self, DAW):
+    def __init__(self, DAW,PATH_TO_DAW):
         self.DAW = DAW
+        self.PATH_TO_DAW = PATH_TO_DAW
+        os.makedirs(PATH_TO_DAW, exist_ok=True)
         self.create_config_file()
         input_tasks_list = self.write_input_csv(DAW)
         nextflow_header = "nextflow.enable.dsl = 2\n"
         include = self.generate_include_modules()
         header = nextflow_header + "\n\n" + include
         workflow = self.write_workflow(input_tasks_list)
-        with open(self.PATH_TO_DAW +"main.nf", "w") as f:
+        with open(self.PATH_TO_DAW +"/main.nf", "w") as f:
             f.write("")
             f.write(header + workflow)
             f.close()

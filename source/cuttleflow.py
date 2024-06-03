@@ -7,32 +7,45 @@ import infra
 from DAW import DAW
 from to_nextflow import to_nextflow
 from annotation import AnnotationDB
-
-annotation_files = []
-annotation_path = './annotation_files'
-for i in os.listdir(annotation_path):
-    if (i.endswith('.json')):
-        full_path = '%s/%s' % (annotation_path, i)
-        annotation_files.append(full_path)
-        #print(full_path)
-annotDB = AnnotationDB(annotation_files)
+import argparse
+import subprocess
 
 
-with open('../test/rnasplice-description/INFRA.json') as jsonfile:
-    infra_description = json.load(jsonfile)
+def main(path_to_workflow, path_to_output):
+    current_directory = subprocess.check_output(['pwd'], universal_newlines=True).strip() + "/source/"
+    annotation_files = []
+    annotation_path = current_directory + 'annotation_files'
+    for i in os.listdir(annotation_path):
+        if (i.endswith('.json')):
+            full_path = '%s/%s' % (annotation_path, i)
+            annotation_files.append(full_path)
 
-with open('../test/rnasplice-description/DAW.json') as jsonfile:
-    daw_description = json.load(jsonfile)
+    annotDB = AnnotationDB(annotation_files)
 
-with open('../test/rnasplice-description/SPLIT_MERGE_TASKS.json') as jsonfile:
-    split_merge_tasks = json.load(jsonfile)
+    with open(path_to_workflow+'/INFRA.json') as jsonfile:
+        infra_description = json.load(jsonfile)
+
+    with open(path_to_workflow+'/DAW.json') as jsonfile:
+        daw_description = json.load(jsonfile)
+
+    with open(path_to_workflow+'/SPLIT_MERGE_TASKS.json') as jsonfile:
+        split_merge_tasks = json.load(jsonfile)
+
+    with open(path_to_workflow+'/INPUT.json') as jsonfile:
+        input_description = json.load(jsonfile)
+
+    my_infra = Infra(infra_description)
+    my_DAW = DAW(daw_description, input_description, my_infra, annotDB)
+    my_DAW = my_DAW.rewrite(annotationdb=annotDB, input_description=input_description, split_merge_annotation=split_merge_tasks)
+
+    to_nextflow(my_DAW, path_to_output)
 
 
-with open('../test/rnasplice-description/INPUT_EVAL_REDUCED.json') as jsonfile:
-    input_description = json.load(jsonfile)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--descriptionFolder', required=True, help='Path to the workflow description files')
+    parser.add_argument('--output', required=True, help='Path to the output directory where the DAW is written')
 
-my_infra = Infra(infra_description)
-my_DAW = DAW(daw_description, input_description, my_infra, annotDB)
-my_DAW = my_DAW.rewrite(annotationdb=annotDB, input_description=input_description, split_merge_annotation=split_merge_tasks)
+    args = parser.parse_args()
 
-to_nextflow(my_DAW)
+    main(args.descriptionFolder, args.output)

@@ -12,8 +12,6 @@ from scipy.optimize import nnls
 from scipy.spatial import distance
 
 import warnings
-
-# warnings.filterwarnings("error", category=pd.core.common.SettingWithCopyWarning)
 warnings.filterwarnings("ignore", category=pd.core.common.SettingWithCopyWarning)
 
 
@@ -151,7 +149,7 @@ class AnnotationDB:
 
     def __init__ (self, annotation_files_list):
         
-        path_runtimes_align = "./annotation_files/runtime_aligners_with_CPU_RAM.csv"
+        path_runtimes_align = "./source/annotation_files/runtime_aligners_with_CPU_RAM.csv"
         if( os.path.isfile(path_runtimes_align) == False):
             raise Exception("File missing: "+path_runtimes_align) 
         else:
@@ -161,7 +159,7 @@ class AnnotationDB:
                 self.dataset_scaler = runtime_model[1]
                 self.RAM_scaler = runtime_model[2]
                 self.CPU_scaler = runtime_model[3]
-        path_runtimes_split = "./annotation_files/runtime_split_merge.csv"
+        path_runtimes_split = "./source/annotation_files/runtime_split_merge.csv"
         if( os.path.isfile(path_runtimes_split) == False):
             raise Exception("File missing: "+path_runtimes_split) 
         else:
