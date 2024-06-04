@@ -24,7 +24,6 @@ generated_daw_rnasplice_test
 |-- nextflow.config
 ```
 
-
 `main.nf` contains the DAW's Nextflow code and the path to the module.
 `nextflow.config` contains the parameters needed to run the DAW. By default, we include the generation of trace files containing metrics on the DAW execution.
 `input.csv` contains the path and metadata and input data required to run the DAW.
@@ -33,6 +32,8 @@ generated_daw_rnasplice_test
 
 You can run the DAW with this command:
 `nextflow run main.nf -c nextflow.config`.
+
+You need to edit the `INPUT.json` and `INFRA.json` files to be able to run the DAW on your data and infrastructure.
 
 For more information about Nextflow, visit their [website](https://www.nextflow.io/docs/latest/index.html).
 
