@@ -60,3 +60,8 @@ If you have annotated some bio-tools so that they can be replaced or split by Cu
 - `source/annotation_files/infrastructure_runtime`: add a description of the infrastructure you ran your tool on.
 - `source/annotation_files/': add the description of your tool here. 
 - source/annotation_files/runtime_aligners.csv': add the runtime of your tool here
+
+
+## Reproduction package
+
+Will be done the 5th of June! 
