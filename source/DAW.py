@@ -81,9 +81,7 @@ class DAW:
         return tasks_priority
         
     def insert_tasks(self, new_tasks):
-        print(self.tasks)
         self.tasks.append(new_tasks)
-        print(self.tasks)
         self.tasks_priority = self.define_tasks_priority()
     
     # Creates a DAW object from the description 

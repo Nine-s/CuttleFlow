@@ -35,24 +35,13 @@ def find_split_input(DAW, channeled_inputs, split_input_type):
         finished = False
         no_parents = False
         task = next(task for task in DAW.tasks if c_input.split(".")[0]==task.module_name)
-        print(task.tool)
-        print(task.operation)
-        print(task.inputs)
-        print(task.input_description)
-        print(task.inputs_from_DAW)
-        print(task.require_input_from)
         for i in task.inputs:
-            print(i)
-            print(i.input_type)
-            print(i.paths)
             if i.input_type==split_input_type:
                 return c_input
         child_task_requirements = task.require_input_from
-        print(child_task_requirements)
             #return c_input
         while (finished == False) & (no_parents == False):
             parent_tasks = [task for task in DAW.tasks if task.module_name in [req.split(".")[0] for req in child_task_requirements]]
-            print(parent_tasks)
             if parent_tasks == []:
                 no_parents = True
                 #check for all parent tasks whether one of the has samples as input
@@ -74,7 +63,6 @@ def find_last_split_task(DAW, annotation_database, align_task):
         next_tasks = [task for task in DAW.tasks if [requirement for requirement in task.require_input_from if output_last_split_task.match(requirement)] != []]
         if next_tasks != []:    
             for task in next_tasks:
-                print(task.tool)
                 annotation_next_task = [annotation for annotation in annotation_database.annotation_db if annotation.toolname == task.tool]
                 if annotation_next_task != []:
                     if annotation_next_task[0].is_splittable == "True":
@@ -143,7 +131,6 @@ def split(DAW, annotation_database, input_description, split_operation, predict_
             except StopIteration:
             #samples not direct input of align task: search along DAG to find task that provides preprocessed input
                 channeled_inputs = first_split_task.require_input_from
-                print(channeled_inputs)
                 split_input_channel = find_split_input(DAW, channeled_inputs, input_type_split)
                 input_to_split = split_input_channel
             

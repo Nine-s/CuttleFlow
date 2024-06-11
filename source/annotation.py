@@ -7,13 +7,11 @@ import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.preprocessing import StandardScaler
-from matplotlib import pyplot as plt
-from scipy.optimize import nnls
 from scipy.spatial import distance
-
+from pandas.errors import SettingWithCopyWarning
 import warnings
-warnings.filterwarnings("ignore", category=pd.core.common.SettingWithCopyWarning)
 
+warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
 
 class AnnotationDB:  
 
