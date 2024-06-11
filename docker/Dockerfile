@@ -22,7 +22,7 @@ RUN python3 -m venv /opt/venv && \
 #the following part downloads and unzips the cuttleflow code, could be removed
 RUN wget https://github.com/Nine-s/CuttleFlow/archive/refs/heads/master.zip -O /home/ubuntu/Cuttleflow.zip
 RUN apt install unzip
-RUN unzip /home/ubuntu/Cuttleflow.zip -d /home/ubuntu/Cuttleflow
+RUN unzip /home/ubuntu/Cuttleflow.zip -d /home/ubuntu/CuttleFlow
 
 ENV PATH="/opt/venv/bin:$PATH"
 
