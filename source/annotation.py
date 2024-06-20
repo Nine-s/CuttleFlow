@@ -8,7 +8,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import distance
-from pandas.errors import SettingWithCopyWarning
+from pandas.core.common import SettingWithCopyWarning
 import warnings
 
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
