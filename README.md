@@ -60,11 +60,116 @@ description_folder
 |-- SPLIT_MERGE_TASKS.json
 ```
 
-- DAW.json' contains the DAW declaration, including the inputs and outputs of the various tasks, and the path to the Nextflow modules to be used.
-- INFRA.json' contains the description of the machine or cluster you want to run your workflow on.
-- INPUT.json' contains information about your input data and its paths.
-- SPLIT_MERGE_TASKS.json is a file that you will need to edit to add your own parallelisation logic.
+- 'DAW.json' contains the DAW declaration, including the inputs and outputs of the various tasks, and the path to the Nextflow modules to be used.
+- 'INFRA.json' contains the description of the machine or cluster you want to run your workflow on.
+- 'INPUT.json' contains information about your input data and its paths.
+- 'SPLIT_MERGE_TASKS.json' is a file that you will need to edit to add your own parallelisation logic.
 
+## DAW description
+
+The DAW.json contains all the DAW tasks in a list called `tasks`. Each task has multiple properties that need to be specified in the corresponding list entry:
+
+- `name`: task name, only used internally during workflow rewriting, e.g. `"star_align"`
+- `toolname`: name of the tool performing the task, e.g. `"STAR"`
+- `operation`: operation performed by the task, e. g. `"align"` 
+- `inputs`: list of task inputs, e.g. `["TRIMGALORE.out_channel.preprocessed_reads", "STAR_GENOMEGENERATE.out_channel.index", "annotation_gtf"]`
+- `outputs`: list of task outputs, e.g. `["sam"]` 
+- `parameters` (optional): can be used to specify task parameters
+- `module_name`: name the module is imported with in the final nextflow script, e.g. `"STAR_ALIGN"`
+- `module_path`: path to the nextflow task module, e.g. "./modules/STAR_ALIGN.nf"
+- `include_from` (optional): if the `module_name` variable is different from the nextflow process name, this variable should contain the name of the nextflow process in the nextflow file specified by the `module_path` - this allows to reuse nextflow modules in the DAW by importing the same module multiple times with different module names
+- `channel_operators` (optional): list of nextflow channel operators like `".collect()"` for each task input - list needs to have the same length as the `inputs` list
+
+The corresponding entry in the `tasks` list should look like this:
+
+```
+{
+    "name": "star_align",
+    "toolname": "STAR",
+    "operation": "align",
+    "inputs": ["TRIMGALORE.out_channel.preprocessed_reads", "STAR_GENOMEGENERATE.out_channel.index", "annotation_gtf"],
+	  "outputs": ["sam"],
+	  "parameters": [""],
+    "module_name": "STAR_ALIGN",
+    "module_path": ".modules/STAR_ALIGN.nf",
+    "channel_operators": [".collect()", "", ""]
+}  
+```
+
+The different inputs of each task must be specified in the same order in the DAW description as in the corresponding nextflow process. Task inputs that have not been previously processed by other tasks are specified by the same name as in the description in the `INPUT.json`. Task inputs that are outputs of previous task need to be specified in the following way: `{PARENT.module_name}.out_channel.{PARENT.output_name}`. For example, if one input is the output `preprocessed_reads` from the task `TRIMGALORE`, the specified input should be `TRIMGALORE.out_channel.preprocessed_reads`.
+
+## Infrastructure description
+
+The infrastructure description is provided in the file INFRA.json. This json should contain information about the nodes of the infrastructure, and optionally, the infrastructures bandwidth. The `nodes` variable in the json file should be a list of elements describing the name, RAM, cores and CPU frequency of the single nodes. For example, the infrastructure description of a system with one node which has 128GB of RAM, 8 cores and a CPU frequency of 2.4 GHz could look like this:
+
+```
+{  
+   "bandwidth":"X",
+   "nodes": [
+    {
+       "name": "node",
+       "RAM": "128G",
+       "cores":"8",
+       "CPU":"2400m"       
+    }]
+}
+```
+
+## Input description
+
+The input description consists of three lists: `samples`, `references` and `parameters`. The `samples` list entries each contain the following information:
+
+- `name`: sample name, e.g. `"sample01"`
+- `type`: input sample type, usually `"reads"`
+- `path_r1`: path to the sample, e.g. `"./samples/sample01.fq.fz"'
+- `path_r2` (optional): path to the second sample (if paired end)
+- `strand`: specifies strandedness of the sample, e.g. `"forward"`
+- `uncompressed_size`: uncompressed sample size in GB, e.g. `"16"`
+- `condition` (optional): can be used to specify sample conditions like `isolated`
+
+The corresponding entry in the `samples` list shoud look like this: 
+```
+{
+        "name": "sample01",
+        "type": "reads",
+        "path_r1": "./samples/sample01.fastq.gz",
+        "strand": "forward",
+        "uncompressed_size": "16"
+}
+```
+The entries in the `references` list contain the following information: 
+
+- `name`: reference name, e.g. `"annotation_gtf"`
+- `path`: path to reference, e.g. `"./references/annotation.gtf"`
+- `type`: reference type, usually one of `"genome"`, `"annotation"` or `"transcriptome"`
+- `uncompressed_size`: uncompressed reference size in GB, e.g. `"1.5"`
+
+The corresponding entry in the `references` list shoud look like this: 
+```
+{
+       "name": "annotation_gtf",
+       "path": "./references/annotation.gtf",
+       "reference_type": "annotation",
+       "uncompressed_size": "1.5"
+}
+```
+The entries in the `parameters` list contain workflow parameters included in the nextflow config file. For each parameter, simply add an entry like
+```
+   {
+     "name": "outdir",
+     "value": "./results"
+   }
+```
+Where `name` specifies the parameter name and `value` the corresponding value.
+## Split and merge tasks description
+
+The description of the split and merge tasks contains one entry per split-merge-task pair that can be added to the workflow during rewriting by CuttleFlow. Each of these entries has a name, e.g. `"fastq_reads"`. Then, each of these entries needs the following variables: 
+
+- `operation`: the operation of the task(s) to be split, e.g. `align`
+- `align_operation`: `"True"` if the operation is align-like, else  `"False"`
+- `reference_type`: type of the input that should be split, e.g. `"sample"`
+- `split`: task description of the split task, needs to comply to the same task description rules as the tasks in the DAW description
+- `merge`: task description of the merge task, needs to comply to the same task description rules as the tasks in the DAW description
 ## Adding tool annotations
 
 If you have annotated some bio-tools so that they can be replaced or split by CuttleFlow, please edit the following files
