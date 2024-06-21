@@ -172,9 +172,52 @@ The description of the split and merge tasks contains one entry per split-merge-
 - `merge`: task description of the merge task, needs to comply to the same task description rules as the tasks in the DAW description
 ## Adding tool annotations
 
-If you have annotated some bio-tools so that they can be replaced or split by CuttleFlow, please edit the following files
+If you want to add annotations for some bio-tools so that they can be replaced or split by CuttleFlow, you should edit the following files:
 
-- `source/annotation_files/infrastructure_runtime`: add a description of the infrastructure you ran your tool on.
-- `source/annotation_files/': add the description of your tool here. 
-- source/annotation_files/runtime_aligners.csv': add the runtime of your tool here
+1. `source/annotation_files/infrastructure_runtime/{CLUSTER}.json`: add a json description of the infrastructure you ran your tool on. This json should have the same format as the infrastructure description used for rewriting.
+2. `source/annotation_files/{TOOLNAME}.json`: add the description of your new tool here. Your tool description should contain the following information:
+- `toolname`: name of the tool, e.g. `"Hisat2"`
+- `operation`: operation performed by the tool, e.g. `"align"`
+- `domain_specific_features`: specific features of the tool, e.g. `"splice_junctions"`
+- `is_splittable`: `"True"` if the tool can be parallelized, else `"False"`
+- `mandatory_input_list`: list of inputs that are required by the tool, e.g. `["reads", "ref_genome"]`
+- `output_list`: list of outputs produced by the tool, e.g. `["sam", "log"]`
+- `module_path`: path to the corresponding nextflow module, e.g. `"./modules/hisat2.nf"
+- `module_name`: name of the corresponding nextflow process, e.g. `"HISAT2_ALIGN"`
 
+Additionally, RAM requirements of alignment tools for different species can be specified. These information are entered in a list called `resource_requirements_RAM`, with each entry containing the following information:
+- `organism_name`: name of the reference species, e.g. `"drosophila"`
+- `reference_size`: size of the reference genome, e.g. `"0.137G"`
+- `RAM`: RAM required by the tool to align against the described reference genome, e.g. `"1G"`
+In total, the exemplary annotation of the tool `Hisat2` should look like this:
+```
+{
+    "toolname": "Hisat2",
+    "operation": "align",
+    "domain_specific_features": "splice_junctions",
+    "is_splittable": "True",
+    "mendatory_input_list": ["reads", "ref_genome"],
+    "output_list": ["sam", "log"],
+    "module_path": "./modules/hisat2.nf",
+    "module_name":"HISAT2_ALIGN",
+
+    "resource_requirements_RAM": [
+        {
+            "organism_name": "drosophila",
+            "reference_size": "0.137G",
+            "RAM": "1G"
+        }
+    ]
+} 
+``` 
+
+ 3. `source/annotation_files/runtime_aligners_with_CPU_RAM.csv`: add the runtime of your tool aswell as information about the executed alignment on your cluster here. Each line in the `csv`-file contains the following information:
+- `infrastructure`: name of the infrastructure the tool was run on as specified in the json description of the infrastructure
+- `dataset_size`: size of the fastq file that was aligned in GB
+- `RAM`: (average) RAM of the cluster nodes
+- `CPUMHz`: (average) CPU frequency of the cluster nodes in MHz
+- `ref_genome_size`: size of the reference genome in GB
+- `reference_species`: name of the reference species
+
+Then, the file contains one column per alignment tool. If you only ran your experiments with a different tool or only a subset of the tools for which columns exist, add `NaN` values for every experiments you do not have runtime data for.
+>>>>>>> Stashed changes
