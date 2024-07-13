@@ -1,1 +1,0 @@
-2024-01-11 15:43:25	-	chaotic_euler	-	193afb964e627d5ae6eeb12981c17234	2bcb15fc-7527-4d71-9ed2-c173ed898713	nextflow run generated_workflow/main.nf -c nextflow.config -resume
