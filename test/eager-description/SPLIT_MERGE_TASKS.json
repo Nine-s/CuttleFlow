@@ -1,0 +1,29 @@
+{
+
+    "fastq_reads": {
+    	    "operation": "align_dna",
+    	    "align_operation": "True",
+    	    "reference_type": "sample",
+	    "merge": {
+		 "name": "merge",
+		 "tool": "samtools_merge",
+		 "operation": "merge",
+		 "outputs": ["merged"],
+		 "parameters": [""],
+		 "module_name": "SAMTOOLS_MERGE",
+		 "module_path": "/work/simon/eager_modules/samtools.nf",
+		 "channel_operators": [".collect()"]
+	      },
+	      
+	    "split": {
+		 "name": "split",
+		 "tool": "fastqsplit",
+		 "operation": "split_reads",
+		 "outputs": ["split_reads"],
+		 "parameters": [""],
+		 "module_name": "FASTQSPLIT",
+		 "module_path": "/work/simon/eager_modules/fastqsplit.nf"
+	      }  
+    }	
+}
+

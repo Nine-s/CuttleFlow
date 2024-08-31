@@ -1,0 +1,102 @@
+{
+   "samples": [
+
+      {
+         "name": "FRT511A-Un",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774470_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774470_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      },
+      {
+         "name": "FRT504-Un",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774471_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774471_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      },
+      {
+         "name": "PPC529-UnB",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774472_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774472_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      },
+      {
+         "name": "PPC529-PrB",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774473_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774473_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      },
+      {
+         "name": "TS211F-UnA",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774474_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774474_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      },
+      {
+         "name": "PPC529-UnA",
+         "type": "reads",
+         "path_r1": "/work/simon/data_eager/SRR7774475_1.fastq.gz",
+         "path_r2": "/work/simon/data_eager/SRR7774475_2.fastq.gz",
+         "strand": "unstranded",
+         "uncompressed_size": "13",
+         "condition": ""
+      }
+   ],
+
+   "references": [
+    {
+       "name": "annotation_gtf",
+       "path": "/work/simon/data_eager/Mus_musculus.GRCm39.111.gtf",
+       "reference_type": "annotation",
+       "uncompressed_size": "0.149"
+    },
+
+    {
+       "name": "genome",
+       "path": "/work/simon/data_eager/Mus_musculus.GRCm39.dna.toplevel.fa",
+       "reference_type": "genome",
+       "uncompressed_size": "0.136"
+    },
+
+    {
+       "name": "fasta",
+       "path": "/work/simon/data_eager/Mus_musculus.GRCm39.cdna.all.fa",
+       "reference_type": "transcriptome",
+       "uncompressed_size": "0.089"
+    }
+ ],
+ 
+ "parameters": [
+   {
+     "name": "clip_adapters_list",
+     "value": "" 
+   },
+   {
+     "name": "database",
+     "value": "/path/to/malt_database" 
+   },
+   {
+     "name": "maltextract_taxon_list",
+     "value": "val" 
+   },
+   {
+     "name": "ncbifiles",
+     "value": "val" 
+   }   
+ ]
+ 
+}
